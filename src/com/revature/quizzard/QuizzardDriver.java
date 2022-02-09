@@ -1,9 +1,8 @@
 package com.revature.quizzard;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class QuizzardDriver {
 
@@ -57,7 +56,22 @@ public class QuizzardDriver {
                     System.out.println("Password: ");
                     String password = consoleReader.readLine();
 
-                    System.out.printf("Registration info provided: %s, %s, %s, %s, %s", firstName,lastName,email,username,password);
+                    // instantiate a user
+                    AppUser newUser = new AppUser(firstName,lastName,email,username,password);
+                    System.out.printf("Registration info provided: %s\n", newUser.toString());
+
+                    // TODO validate the user input
+
+                    // TODO persist user info to a file
+                    newUser.setId(UUID.randomUUID().toString());
+                    String fileString = newUser.toFileString() + "\n";
+
+                    File usersDataFile = new File("data/users.txt");
+                    FileWriter dataWriter = new FileWriter(usersDataFile, true); //append mode
+                    dataWriter.write(fileString);
+                    dataWriter.close();
+
+
 
                     break;
                 case "3":

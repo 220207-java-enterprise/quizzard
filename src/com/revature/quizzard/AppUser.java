@@ -77,6 +77,17 @@ public class AppUser {
         this.password = password;
     }
 
+
+    // toFileString method
+    public String toFileString(){
+        return new StringBuilder(id).append(":")
+                .append(firstName).append(":")
+                .append(lastName).append(":")
+                .append(email).append(":")
+                .append(password).append(":")
+                .toString();
+    }
+
     // override common methods
 
     @Override
