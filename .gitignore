@@ -26,11 +26,12 @@ hs_err_pid*
 .idea/
 *.iml
 
+# App specific folders
+data/
+
 # Build folders
 target/
 build/
 out/
 dist/
 
-# App specific folders
-data/
