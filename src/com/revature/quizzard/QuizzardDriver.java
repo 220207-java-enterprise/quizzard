@@ -17,6 +17,7 @@ public class QuizzardDriver {
 
         System.out.print(welcomeMenu);
 
+
         // Scanner and BufferedReader
 
         // BufferedReader is more flexible in taking user input
@@ -77,7 +78,6 @@ public class QuizzardDriver {
 //        Scanner consoleScanner = new Scanner(System.in);
 //        String userInput = consoleScanner.next(); // only grabs string before whitespace
 //        System.out.println(userInput);
-
 
     }
 
