@@ -3,11 +3,16 @@ package com.revature.quizzard;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class QuizzardDriver {
 
+    private static int loopCounter = 0;
+
     public static void main(String[] args) {
+
+        if (loopCounter == 3) {
+            throw new RuntimeException("Looped three times");
+        }
 
         String welcomeMenu = "Welcome to Quizzard!\n" +
                              "Please make a selection from the options below:\n" +
@@ -18,19 +23,10 @@ public class QuizzardDriver {
 
         System.out.print(welcomeMenu);
 
-        // Scanner and BufferedReader
-
-        // Scanner works well when parsing text for strings, ints, etc.
-        // BufferedReader works especially well when you only expect to deal with strings
-
         BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
-        // try, to do something that might result in an exception
         try {
 
-            // Throwables...can be caught.
-            // Two main types: Errors and Exceptions
-            // Exceptions come in two flavors: Checked and Unchecked
             String userSelection = consoleReader.readLine();
             System.out.println(userSelection);
 
@@ -40,6 +36,25 @@ public class QuizzardDriver {
                     break;
                 case "2":
                     System.out.println("You selected: Register");
+                    System.out.println("Please provide some basic information to register an account:");
+
+                    System.out.print("First name: ");
+                    String firstName = consoleReader.readLine();
+
+                    System.out.print("Last name: ");
+                    String lastName = consoleReader.readLine();
+
+                    System.out.print("Email: ");
+                    String email = consoleReader.readLine();
+
+                    System.out.print("Username: ");
+                    String username = consoleReader.readLine();
+
+                    System.out.print("Password: ");
+                    String password = consoleReader.readLine();
+
+                    System.out.printf("Registration info provided: %s %s %s %s %s", firstName, lastName, email, username, password);
+
                     break;
                 case "3":
                     System.out.println("You selected: Exit");
@@ -49,17 +64,12 @@ public class QuizzardDriver {
 
             }
 
-        }
-        // if the exception occurs, do something about it
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            // always executes regardless of whether or not an exception was thrown
-            System.out.println("and finally!");
         }
 
-
-
+        loopCounter++;
+        main(args); // TODO maybe don't use recursion here?
 
     }
 
