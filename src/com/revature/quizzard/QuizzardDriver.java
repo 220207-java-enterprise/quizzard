@@ -1,6 +1,7 @@
 package com.revature.quizzard;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -56,28 +57,23 @@ public class QuizzardDriver {
                     System.out.println("Password: ");
                     String password = consoleReader.readLine();
 
-                    // instantiate a user
-                    AppUser newUser = new AppUser(firstName,lastName,email,username,password);
-                    System.out.printf("Registration info provided: %s\n", newUser.toString());
-
                     // TODO validate the user input
 
-                    // Validation criteria
-                    // firstName and lastName --> trim the string, no integers, range, no strange characters
-                    // and that data was entered
+                    AppUser newUser = new AppUser(firstName,lastName,email,username,password);
 
+                    if(isValidUser(newUser)) {
+                        System.out.printf("Registration info provided: %s\n", newUser.toString());
 
-                    // emaiil --> no more than 1 @ followed by a character sequence followed b at least one "dot" followed by some character sequence
-                    // TODO persist user info to a file
-                    newUser.setId(UUID.randomUUID().toString());
-                    String fileString = newUser.toFileString() + "\n";
+                        // TODO persist user info to a file
+                        newUser.setId(UUID.randomUUID().toString());
+                        String fileString = newUser.toFileString() + "\n";
 
-                    // write to users.txt file
-                    File usersDataFile = new File("data/users.txt");
-                    FileWriter dataWriter = new FileWriter(usersDataFile, true); //append mode
-                    dataWriter.write(fileString);
-                    dataWriter.close();
-
+                        // write to users.txt file
+                        File usersDataFile = new File("data/users.txt");
+                        FileWriter dataWriter = new FileWriter(usersDataFile, true); //append mode
+                        dataWriter.write(fileString);
+                        dataWriter.close();
+                    }
 
 
                     break;
@@ -92,14 +88,33 @@ public class QuizzardDriver {
         catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        //  Scanner may be better if you want to get specific datatype from user
-        // Syntax
-//        Scanner consoleScanner = new Scanner(System.in);
-//        String userInput = consoleScanner.next(); // only grabs string before whitespace
-//        System.out.println(userInput);
-
     }
 
+    public static boolean isValidUser(AppUser user){
+
+        String firstName = user.getFirstName();
+        firstName = firstName.trim();
+
+        if (firstName.length() < 2 || firstName.length() > 15) {
+            System.out.println("First name needs to be between 2-15 characters");
+            return false;
+        }
+        for (int i=0; i<firstName.length();i++){
+           char c = firstName.charAt(i);
+            if(!Character.isAlphabetic(c)){
+                System.out.println("Name must only consist of a-z characters");
+                return false;
+            }
+        }
+
+        // capitalize first letter
+        String firstLetter = String.valueOf(firstName.charAt(0));
+        firstLetter = firstLetter.toUpperCase();
+        firstName = firstLetter + firstName.substring(1);
+        System.out.println(firstName);
+
+
+
+        return false;
+    }
 }
