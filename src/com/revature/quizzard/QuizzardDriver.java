@@ -62,10 +62,15 @@ public class QuizzardDriver {
 
                     // TODO validate the user input
 
+                    // Validation criteria
+                    // firstName --> trim the string, no integers, range, no strange characters
+                    // and that data was entered
+
                     // TODO persist user info to a file
                     newUser.setId(UUID.randomUUID().toString());
                     String fileString = newUser.toFileString() + "\n";
 
+                    // write to users.txt file
                     File usersDataFile = new File("data/users.txt");
                     FileWriter dataWriter = new FileWriter(usersDataFile, true); //append mode
                     dataWriter.write(fileString);
