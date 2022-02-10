@@ -63,9 +63,11 @@ public class QuizzardDriver {
                     // TODO validate the user input
 
                     // Validation criteria
-                    // firstName --> trim the string, no integers, range, no strange characters
+                    // firstName and lastName --> trim the string, no integers, range, no strange characters
                     // and that data was entered
 
+
+                    // emaiil --> no more than 1 @ followed by a character sequence followed b at least one "dot" followed by some character sequence
                     // TODO persist user info to a file
                     newUser.setId(UUID.randomUUID().toString());
                     String fileString = newUser.toFileString() + "\n";
