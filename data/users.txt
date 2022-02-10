@@ -1,3 +1,1 @@
 09d44e97-ab0e-4abd-a8c0-88b416a29c30:test:test:test@test.com:password:
-ddaebe4f-8bcc-49c1-92de-4693a62fef1c:Abhilekh:Adhikari:4bhilekh@gmail.com:password:
-ea22a0ce-5ee3-4947-a0ae-3522cb4af65b:test:test2:t@t.com:testpass:
