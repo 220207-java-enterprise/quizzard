@@ -32,6 +32,13 @@ public class QuizzardDriver {
             switch (userSelection) {
                 case "1":
                     System.out.println("You selected: Login");
+                    System.out.println("Please provide your username and password:");
+
+                    System.out.print("Username: ");
+                    String log_username = consoleReader.readLine();
+
+                    System.out.print("Password: ");
+                    String log_password = consoleReader.readLine();
                     break;
                 case "2":
                     System.out.println("You selected: Register");
