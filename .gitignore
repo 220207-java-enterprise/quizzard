@@ -33,4 +33,4 @@ out/
 dist/
 
 # App-specific folders
-data/
+/data/
