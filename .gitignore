@@ -34,3 +34,9 @@ dist/
 
 # App-specific folders
 data/
+
+# DS_Store
+.DS_Store
+src/.DS_Store
+src/com/.DS_Store
+src/com/revature/.DS_Store
