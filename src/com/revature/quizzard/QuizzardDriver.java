@@ -14,6 +14,7 @@ public class QuizzardDriver {
         }
 
         String welcomeMenu = "Welcome to Quizzard!\n" +
+
                 "Please make a selection from the options below:\n" +
                 "1) Login\n" +
                 "2) Register\n" +
