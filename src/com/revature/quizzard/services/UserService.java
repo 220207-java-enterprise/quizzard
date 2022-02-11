@@ -1,6 +1,6 @@
 package com.revature.quizzard.services;
 
-import com.revature.quizzard.AppUser;
+import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.daos.UserDAO;
 
 import java.io.IOException;

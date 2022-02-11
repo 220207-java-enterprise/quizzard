@@ -1,10 +1,9 @@
 package com.revature.quizzard.screens;
 
-import com.revature.quizzard.AppUser;
+import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.services.UserService;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
