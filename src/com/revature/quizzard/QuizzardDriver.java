@@ -27,78 +27,17 @@ public class QuizzardDriver {
 
         try {
 
-
-
             String userSelection = consoleReader.readLine();
             System.out.println(userSelection);
 
             switch (userSelection) {
                 case "1":
                     System.out.println("You selected: Login");
-
-                    // UI logic
-                    System.out.println("Please provide your account credentials to login:");
-
-                    System.out.print("Username: ");
-                    String loginUsername = consoleReader.readLine();
-
-                    System.out.print("Password: ");
-                    String loginPassword = consoleReader.readLine();
-
-                    // Business/Validation logic
-                    if (!isUsernameValid(loginUsername) || !isPasswordValid(loginPassword)) {
-                        throw new RuntimeException("Invalid credentials provided!");
-                    }
-
-                    // Persistence logic
-                    BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
-                    String dataCursor;
-                    while ((dataCursor = dataReader.readLine()) != null) {
-                        String[] recordFragments = dataCursor.split(":");
-                        if (recordFragments[4].equals(loginUsername) && recordFragments[5].equals(loginPassword)) {
-                            System.out.println("User found with matching credentials: " + dataCursor);
-                            return; // TODO remove this later
-                        }
-                    }
-
-                    throw new RuntimeException("No user found with the provided credentials"); // TODO handle better
-
-
-                case "2":
-                    System.out.println("You selected: Register");
-                    System.out.println("Please provide some basic information to register an account:");
-
-                    System.out.print("First name: ");
-                    String firstName = consoleReader.readLine();
-
-                    System.out.print("Last name: ");
-                    String lastName = consoleReader.readLine();
-
-                    System.out.print("Email: ");
-                    String email = consoleReader.readLine();
-
-                    System.out.print("Username: ");
-                    String username = consoleReader.readLine();
-
-                    System.out.print("Password: ");
-                    String password = consoleReader.readLine();
-
-
-                    // TODO validate that the provided username and email are not already taken
-
-                    AppUser newUser = new AppUser(firstName, lastName, email, username, password);
-
-                    if (!isUserValid(newUser)) {
-                        throw new RuntimeException("Bad registration details given."); // this will halt the app
-                    }
-
-                    newUser.setId(UUID.randomUUID().toString());
-                    File usersDataFile = new File("data/users.txt");
-                    FileWriter dataWriter = new FileWriter(usersDataFile, true);
-                    dataWriter.write(newUser.toFileString());
-                    dataWriter.close();
+                    loginScreen(consoleReader);
                     break;
-
+                case "2":
+                    registerScreen(consoleReader);
+                    break;
                 case "3":
                     System.out.println("You selected: Exit");
                     return;
@@ -114,6 +53,70 @@ public class QuizzardDriver {
 
         loopCounter++;
         main(args); // TODO maybe don't use recursion here?
+    }
+
+    public static void loginScreen(BufferedReader consoleReader) throws IOException {
+        // UI logic
+        System.out.println("Please provide your account credentials to login:");
+
+        System.out.print("Username: ");
+        String loginUsername = consoleReader.readLine();
+
+        System.out.print("Password: ");
+        String loginPassword = consoleReader.readLine();
+
+        // Business/Validation logic
+        if (!isUsernameValid(loginUsername) || !isPasswordValid(loginPassword)) {
+            throw new RuntimeException("Invalid credentials provided!");
+        }
+
+        // Persistence logic
+        BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
+        String dataCursor;
+        while ((dataCursor = dataReader.readLine()) != null) {
+            String[] recordFragments = dataCursor.split(":");
+            if (recordFragments[4].equals(loginUsername) && recordFragments[5].equals(loginPassword)) {
+                System.out.println("User found with matching credentials: " + dataCursor);
+                return; // TODO remove this later
+            }
+        }
+
+        throw new RuntimeException("No user found with the provided credentials"); // TODO handle better
+    }
+
+    public static void registerScreen(BufferedReader consoleReader) throws IOException {
+        System.out.println("You selected: Register");
+        System.out.println("Please provide some basic information to register an account:");
+
+        System.out.print("First name: ");
+        String firstName = consoleReader.readLine();
+
+        System.out.print("Last name: ");
+        String lastName = consoleReader.readLine();
+
+        System.out.print("Email: ");
+        String email = consoleReader.readLine();
+
+        System.out.print("Username: ");
+        String username = consoleReader.readLine();
+
+        System.out.print("Password: ");
+        String password = consoleReader.readLine();
+
+
+        // TODO validate that the provided username and email are not already taken
+
+        AppUser newUser = new AppUser(firstName, lastName, email, username, password);
+
+        if (!isUserValid(newUser)) {
+            throw new RuntimeException("Bad registration details given."); // this will halt the app
+        }
+
+        newUser.setId(UUID.randomUUID().toString());
+        File usersDataFile = new File("data/users.txt");
+        FileWriter dataWriter = new FileWriter(usersDataFile, true);
+        dataWriter.write(newUser.toFileString());
+        dataWriter.close();
     }
 
     private static boolean isUserValid(AppUser appUser) {
