@@ -3,9 +3,7 @@ package com.revature.quizzard.daos;
 import com.revature.quizzard.AppUser;
 import com.revature.quizzard.util.exceptions.ResourcePersistenceException;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class UserDAO implements CrudDAO<AppUser> {
 
@@ -18,7 +16,28 @@ public class UserDAO implements CrudDAO<AppUser> {
     }
 
     public AppUser findUserByUsernameAndPassword(String username, String password) {
+        try {
+            BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
+            String dataCursor;
+            while ((dataCursor = dataReader.readLine()) != null) {
+                String[] recordFragments = dataCursor.split(":");
+                if (recordFragments[4].equals(username) && recordFragments[5].equals(password)) {
+                    AppUser authUser = new AppUser();
+                    authUser.setId(recordFragments[0]);
+                    authUser.setFirstName(recordFragments[1]);
+                    authUser.setLastName(recordFragments[2]);
+                    authUser.setEmail(recordFragments[3]);
+                    authUser.setUsername(recordFragments[4]);
+                    authUser.setPassword(recordFragments[5]);
+                    return authUser;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("An error occurred when accessing the data file.");
+        }
+
         return null;
+
     }
 
     @Override

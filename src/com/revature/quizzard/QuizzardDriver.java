@@ -1,5 +1,6 @@
 package com.revature.quizzard;
 
+import com.revature.quizzard.screens.LoginScreen;
 import com.revature.quizzard.screens.RegisterScreen;
 
 import java.io.*;
@@ -35,7 +36,7 @@ public class QuizzardDriver {
             switch (userSelection) {
                 case "1":
                     System.out.println("You selected: Login");
-                    loginScreen(consoleReader);
+                    new LoginScreen().render();
                     break;
                 case "2":
                     new RegisterScreen().render(); // TODO there are better ways, all in due time
@@ -55,35 +56,6 @@ public class QuizzardDriver {
 
         loopCounter++;
         main(args); // TODO maybe don't use recursion here?
-    }
-
-    public static void loginScreen(BufferedReader consoleReader) throws IOException {
-        // UI logic
-        System.out.println("Please provide your account credentials to login:");
-
-        System.out.print("Username: ");
-        String loginUsername = consoleReader.readLine();
-
-        System.out.print("Password: ");
-        String loginPassword = consoleReader.readLine();
-
-        // Business/Validation logic
-//        if (!isUsernameValid(loginUsername) || !isPasswordValid(loginPassword)) {
-//            throw new RuntimeException("Invalid credentials provided!");
-//        }
-
-        // Persistence logic
-        BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
-        String dataCursor;
-        while ((dataCursor = dataReader.readLine()) != null) {
-            String[] recordFragments = dataCursor.split(":");
-            if (recordFragments[4].equals(loginUsername) && recordFragments[5].equals(loginPassword)) {
-                System.out.println("User found with matching credentials: " + dataCursor);
-                return; // TODO remove this later
-            }
-        }
-
-        throw new RuntimeException("No user found with the provided credentials"); // TODO handle better
     }
 
 }

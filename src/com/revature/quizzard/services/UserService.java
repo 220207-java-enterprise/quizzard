@@ -24,7 +24,19 @@ public class UserService {
         return newUser;
     }
 
-    public void login(String username, String password) {
+    public AppUser login(String username, String password) {
+
+        if (!isUsernameValid(username) || !isPasswordValid(password)) {
+            throw new RuntimeException("Invalid credentials provided!");
+        }
+
+        AppUser authUser = userDAO.findUserByUsernameAndPassword(username, password);
+
+        if (authUser == null) {
+            throw new RuntimeException("No user found with the provided credentials");
+        }
+
+        return authUser;
 
     }
 
