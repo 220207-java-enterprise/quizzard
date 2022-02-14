@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class UserService {
+    int x = 10;
 
     private final UserDAO userDAO = new UserDAO();
 
@@ -72,6 +73,7 @@ public class UserService {
     }
 
     public boolean isUsernameValid(String username) {
+        if (username == null) return false;
         return username.matches("^[a-zA-Z0-9]{8,25}");
     }
 
