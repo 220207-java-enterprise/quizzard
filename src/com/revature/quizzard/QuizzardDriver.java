@@ -36,75 +36,10 @@ public class QuizzardDriver {
 
             switch(userSelection) {
                 case "1":
-                    System.out.println("You selected: Login");
-                    System.out.println("Please provide your account credentials to login to your account:");
-
-                    // UI logic
-                    System.out.println("Username: ");
-                    String loginUsername = consoleReader.readLine();
-
-                    System.out.println("Password: ");
-                    String loginPassword = consoleReader.readLine();
-
-                    // Business logic
-                    if(!isUsernameValid(loginUsername) || !isPasswordValid(loginPassword)){
-                        throw new RuntimeException("Invalid credentials provided");
-                    }
-
-                    // Persistence logic
-                    BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
-                    String dataCursor;
-
-                    while((dataCursor = dataReader.readLine()) != null){
-                        String[] recordFragments = dataCursor.split(":");
-                        if(recordFragments[4].equals(loginUsername) && recordFragments[5].equals(loginPassword)){
-                            System.out.println("User found with matching credentials: " + dataCursor + "\n Login Successful!");
-                            return; // TODO remove this later
-                        }
-                    }
-
-                    throw new RuntimeException("No user found with the provided credentials"); // TODO handle better
-
-    //                break;
+                    loginScreen(consoleReader);
+                    break;
                 case "2":
-                    System.out.println("You selected: Register");
-                    System.out.println("Please provide some basic information to register an account:");
-
-                    System.out.println("First name: ");
-                    String firstName = consoleReader.readLine();
-
-                    System.out.println("Last name: ");
-                    String lastName = consoleReader.readLine();
-
-                    System.out.println("Email: ");
-                    String email = consoleReader.readLine();
-
-                    System.out.println("Username: ");
-                    String username = consoleReader.readLine();
-
-                    System.out.println("Password: ");
-                    String password = consoleReader.readLine();
-
-                    // TODO validate the user input --> static method isValidUser() (DONE)
-
-                    AppUser newUser = new AppUser(firstName,lastName,email,username,password);
-                    System.out.printf("Registration info provided: %s\n", newUser.toString());
-                    System.out.println("checking validations...");
-                    if (!isValidUser(newUser)){
-                        throw new RuntimeException("Invalid Registration information provided.");
-                    }
-                    // TODO persist user info to a file
-                    newUser.setId(UUID.randomUUID().toString());
-                    String fileString = newUser.toFileString() + "\n";
-
-                    // write to users.txt file
-                    File usersDataFile = new File("data/users.txt");
-                    FileWriter dataWriter = new FileWriter(usersDataFile, true); //append mode
-                    dataWriter.write(fileString);
-                    dataWriter.close();
-
-
-
+                    registerScreen(consoleReader);
                     break;
                 case "3":
                     System.out.println("You selected: Exit");
@@ -117,6 +52,77 @@ public class QuizzardDriver {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void loginScreen(BufferedReader consoleReader) throws IOException {
+
+        System.out.println("Please provide your account credentials to login to your account:");
+
+        // UI logic
+        System.out.println("Username: ");
+        String loginUsername = consoleReader.readLine();
+
+        System.out.println("Password: ");
+        String loginPassword = consoleReader.readLine();
+
+        // Business logic
+        if(!isUsernameValid(loginUsername) || !isPasswordValid(loginPassword)){
+            throw new RuntimeException("Invalid credentials provided");
+        }
+
+        // Persistence logic
+        BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
+        String dataCursor;
+
+        while((dataCursor = dataReader.readLine()) != null){
+            String[] recordFragments = dataCursor.split(":");
+            if(recordFragments[4].equals(loginUsername) && recordFragments[5].equals(loginPassword)){
+                System.out.println("User found with matching credentials: " + dataCursor + "\n Login Successful!");
+                return; // TODO remove this later
+            }
+        }
+
+        throw new RuntimeException("No user found with the provided credentials"); // TODO handle better
+
+    }
+
+    public static void registerScreen(BufferedReader consoleReader) throws IOException{
+
+        System.out.println("You selected: Register");
+        System.out.println("Please provide some basic information to register an account:");
+
+        System.out.println("First name: ");
+        String firstName = consoleReader.readLine();
+
+        System.out.println("Last name: ");
+        String lastName = consoleReader.readLine();
+
+        System.out.println("Email: ");
+        String email = consoleReader.readLine();
+
+        System.out.println("Username: ");
+        String username = consoleReader.readLine();
+
+        System.out.println("Password: ");
+        String password = consoleReader.readLine();
+
+        // TODO validate the user input --> static method isValidUser() (DONE)
+
+        AppUser newUser = new AppUser(firstName,lastName,email,username,password);
+        System.out.printf("Registration info provided: %s\n", newUser.toString());
+        System.out.println("checking validations...");
+        if (!isValidUser(newUser)){
+            throw new RuntimeException("Invalid Registration information provided.");
+        }
+        // TODO persist user info to a file
+        newUser.setId(UUID.randomUUID().toString());
+        String fileString = newUser.toFileString() + "\n";
+
+        // write to users.txt file
+        File usersDataFile = new File("data/users.txt");
+        FileWriter dataWriter = new FileWriter(usersDataFile, true); //append mode
+        dataWriter.write(fileString);
+        dataWriter.close();
     }
 
     public static boolean isValidUser(AppUser appUser){
