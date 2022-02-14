@@ -14,6 +14,10 @@ public class AppUser {
     private String username;
     private String password;
 
+    public AppUser() {
+        super(); // not required, but it bugs me personally not to have it
+    }
+
     public AppUser(String firstName, String lastName, String email, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
