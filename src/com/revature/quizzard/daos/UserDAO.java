@@ -1,6 +1,6 @@
 package com.revature.quizzard.daos;
 
-import com.revature.quizzard.AppUser;
+import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.util.exceptions.ResourcePersistenceException;
 
 import java.io.*;
