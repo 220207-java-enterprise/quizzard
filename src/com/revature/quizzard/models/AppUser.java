@@ -1,4 +1,4 @@
-package com.revature.quizzard;
+package com.revature.quizzard.models;
 
 import java.util.Objects;
 

@@ -1,6 +1,6 @@
 package com.revature.quizzard.services;
 
-import com.revature.quizzard.AppUser;
+import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.daos.UserDAO;
 
 import java.io.IOException;
@@ -67,6 +67,7 @@ public class UserService {
 
 
     public Boolean isUsernameValid(String username){
+        if (username == null) return false;
         return username.matches("^[a-zA-Z0-9]{8,25}");
     }
 

@@ -1,10 +1,9 @@
 package com.revature.quizzard.screen;
 
-import com.revature.quizzard.AppUser;
+import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.services.UserService;
 
 import java.io.*;
-import java.util.UUID;
 
 public class RegisterScreen extends Screen{
 

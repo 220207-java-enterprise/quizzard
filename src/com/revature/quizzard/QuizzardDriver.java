@@ -10,6 +10,8 @@ import java.util.UUID;
 
 public class QuizzardDriver {
 
+    private static int loopCounter = 0;
+
     public static void main(String[] args) {
         String welcomeMenu = "Welcome to Quizzard!\n" +
                 "Please make a selection from the options below\n"+
@@ -55,7 +57,9 @@ public class QuizzardDriver {
         catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
+        loopCounter++;
+        main(args); //TODO maybe dont use recursion
+    }
 
 }
