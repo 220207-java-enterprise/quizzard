@@ -14,6 +14,12 @@ public class TestRunner {
 
         try {
             Class<?> testSuiteClass = Class.forName("com.revature.quizzard.services.UserServiceTest");
+
+            if (!testSuiteClass.isAnnotationPresent(Describe.class)) {
+                throw new RuntimeException("Test suite classes are expected to be annotated with @Describe");
+            }
+
+
             List<Method> testMethods = new LinkedList<>();
             Method beforeEachMethod = null;
 
