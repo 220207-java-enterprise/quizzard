@@ -17,7 +17,11 @@ public class AppUser {
     private String password;
 
 
-    // constructor
+    // constructors
+    public AppUser(){
+        super(); // this line not required.. it is implicit in empty constructors
+    }
+
     public AppUser(String firstName, String lastName, String email, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
