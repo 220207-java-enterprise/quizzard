@@ -1,5 +1,7 @@
 package com.revature.quizzard;
 
+import com.revature.quizzard.screen.RegisterScreen;
+
 import java.io.*;
 import java.util.Locale;
 import java.util.Scanner;
@@ -39,7 +41,7 @@ public class QuizzardDriver {
                     loginScreen(consoleReader);
                     break;
                 case "2":
-                    registerScreen(consoleReader);
+                    new RegisterScreen().render(); //TODO there are better ways
                     break;
                 case "3":
                     System.out.println("You selected: Exit");
@@ -66,9 +68,9 @@ public class QuizzardDriver {
         String loginPassword = consoleReader.readLine();
 
         // Business logic
-        if(!isUsernameValid(loginUsername) || !isPasswordValid(loginPassword)){
-            throw new RuntimeException("Invalid credentials provided");
-        }
+//        if(!isUsernameValid(loginUsername) || !isPasswordValid(loginPassword)){
+//            throw new RuntimeException("Invalid credentials provided");
+//        }
 
         // Persistence logic
         BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
@@ -84,79 +86,5 @@ public class QuizzardDriver {
 
         throw new RuntimeException("No user found with the provided credentials"); // TODO handle better
 
-    }
-
-    public static void registerScreen(BufferedReader consoleReader) throws IOException{
-
-        System.out.println("You selected: Register");
-        System.out.println("Please provide some basic information to register an account:");
-
-        System.out.println("First name: ");
-        String firstName = consoleReader.readLine();
-
-        System.out.println("Last name: ");
-        String lastName = consoleReader.readLine();
-
-        System.out.println("Email: ");
-        String email = consoleReader.readLine();
-
-        System.out.println("Username: ");
-        String username = consoleReader.readLine();
-
-        System.out.println("Password: ");
-        String password = consoleReader.readLine();
-
-        // TODO validate the user input --> static method isValidUser() (DONE)
-
-        AppUser newUser = new AppUser(firstName,lastName,email,username,password);
-        System.out.printf("Registration info provided: %s\n", newUser.toString());
-        System.out.println("checking validations...");
-        if (!isValidUser(newUser)){
-            throw new RuntimeException("Invalid Registration information provided.");
-        }
-        // TODO persist user info to a file
-        newUser.setId(UUID.randomUUID().toString());
-        String fileString = newUser.toFileString() + "\n";
-
-        // write to users.txt file
-        File usersDataFile = new File("data/users.txt");
-        FileWriter dataWriter = new FileWriter(usersDataFile, true); //append mode
-        dataWriter.write(fileString);
-        dataWriter.close();
-    }
-
-    public static boolean isValidUser(AppUser appUser){
-
-        // check firstname and last name -- not empty or filled with whitespace
-        if (appUser.getFirstName().trim().equals("") || appUser.getLastName().trim().equals("")){
-            System.out.println("Bad first/last name");
-            return false;
-        }
-        // usernames must be 8-25 characters in length and only contain alphanumeric characters
-        if (!appUser.getUsername().matches("^[a-zA-Z0-9]{8,25}")){
-            System.out.println("Bad username");
-            return false;
-        }
-        // password
-        if(!appUser.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")){
-            System.out.println("Bad Password");
-            return false;
-        }
-
-        if (!appUser.getEmail().matches("^[^@\\s]+@[^@\\s\\.]+\\.[^@\\.\\s]+$")){
-            System.out.println("Bad Email");
-            return false;
-        }
-
-        System.out.println("Valid information was provided. Creating user..."+appUser);
-        return true;
-    }
-
-    public static Boolean isUsernameValid(String username){
-        return username.matches("^[a-zA-Z0-9]{8,25}");
-    }
-
-    public static Boolean isPasswordValid(String password){
-        return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     }
 }
