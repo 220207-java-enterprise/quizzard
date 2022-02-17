@@ -1,5 +1,9 @@
-drop table if exists user_roles;
+drop table if exists study_set_cards;
+drop table if exists study_sets;
+drop table if exists flashcards;
+drop table if exists categories;
 drop table if exists app_users;
+drop table if exists user_roles;
 
 create table user_roles(
     id 			VARCHAR primary key,

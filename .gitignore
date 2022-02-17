@@ -32,7 +32,7 @@ build/
 out/
 dist/
 
-# App-specific folders
+# App-specific folders and files
 data/
 
 # DS_Store
@@ -40,3 +40,4 @@ data/
 src/.DS_Store
 src/com/.DS_Store
 src/com/revature/.DS_Store
+application.properties
