@@ -22,6 +22,8 @@ public class UserDAO implements CrudDAO<AppUser> {
 
     public AppUser findUserByUsernameAndPassword(String username, String password) {
 
+        System.out.println("findUserByUsernameAndPassword was invoked!!!!!");
+
         AppUser authUser = null;
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 

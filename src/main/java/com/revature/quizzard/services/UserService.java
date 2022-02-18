@@ -7,9 +7,18 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class UserService {
-    int x = 10;
 
-    private final UserDAO userDAO = new UserDAO();
+    private UserDAO userDAO; // a dependency of UserService
+
+    // Constructor injection
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    // Setter injection
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     public AppUser register(AppUser newUser) throws IOException {
 

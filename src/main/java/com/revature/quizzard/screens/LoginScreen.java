@@ -9,16 +9,15 @@ import java.io.InputStreamReader;
 
 public class LoginScreen extends Screen {
 
-    private final UserService userService = new UserService();
+    private final UserService userService;
 
-    public LoginScreen() {
-        super("/login");
+    public LoginScreen(BufferedReader consoleReader, UserService userService) {
+        super("/login", consoleReader);
+        this.userService = userService;
     }
 
     @Override
     public void render() throws IOException {
-
-        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.println("Please provide your account credentials to login:");
 
