@@ -28,6 +28,8 @@ public class UserService {
 
         // TODO validate that the provided username and email are not already taken
 
+        // TODO encrypt provided password before storing in the database
+
         newUser.setId(UUID.randomUUID().toString());
         userDAO.save(newUser);
 
@@ -39,6 +41,8 @@ public class UserService {
         if (!isUsernameValid(username) || !isPasswordValid(password)) {
             throw new RuntimeException("Invalid credentials provided!");
         }
+
+        // TODO encrypt provided password (assumes password encryption is in place) to see if it matches what is in the DB
 
         AppUser authUser = userDAO.findUserByUsernameAndPassword(username, password);
 

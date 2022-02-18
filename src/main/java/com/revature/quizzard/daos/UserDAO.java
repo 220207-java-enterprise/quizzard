@@ -52,13 +52,29 @@ public class UserDAO implements CrudDAO<AppUser> {
 
     @Override
     public void save(AppUser newUser) {
-        try {
-            File usersDataFile = new File("data/users.txt");
-            FileWriter dataWriter = new FileWriter(usersDataFile, true);
-            dataWriter.write(newUser.toFileString() + "\n");
-            dataWriter.close();
-        } catch (IOException e) {
-            throw new ResourcePersistenceException("An error occurred when accessing the data file.");
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            conn.setAutoCommit(false);
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO app_users VALUES (?, ?, ?, ?, ?, ?, ?)");
+            pstmt.setString(1, newUser.getId());
+            pstmt.setString(2, newUser.getFirstName());
+            pstmt.setString(3, newUser.getLastName());
+            pstmt.setString(4, newUser.getEmail());
+            pstmt.setString(5, newUser.getUsername());
+            pstmt.setString(6, newUser.getPassword());
+            pstmt.setString(7, "7c3521f5-ff75-4e8a-9913-01d15ee4dc97"); // TODO fix with Role enum
+
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted != 1) {
+                conn.rollback();
+                throw new RuntimeException("Failed to persist user to data source");
+            }
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

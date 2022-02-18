@@ -24,7 +24,7 @@ public class AppState {
         router = new ScreenRouter();
 
         UserDAO userDAO = new UserDAO();
-        UserService userService = new UserService(userDAO);
+        UserService userService = new UserService(userDAO); // injection like this is sometimes called "wiring"
         router.addScreen(new WelcomeScreen(consoleReader, router));
         router.addScreen(new RegisterScreen(consoleReader, userService)); // TODO probably will use the router in the future
         router.addScreen(new LoginScreen(consoleReader, userService)); // TODO probably will use the router in the future
