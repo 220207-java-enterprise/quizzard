@@ -64,5 +64,3 @@ join app_users au
 on ss.owner_id  = au.id 
 where ss.id = '7c3521f5-ff75-4e8a-9913-01d15ee4dc9c';
 
-
-

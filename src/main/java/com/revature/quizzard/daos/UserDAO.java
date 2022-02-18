@@ -1,9 +1,14 @@
 package com.revature.quizzard.daos;
 
 import com.revature.quizzard.models.AppUser;
+import com.revature.quizzard.util.ConnectionFactory;
 import com.revature.quizzard.util.exceptions.ResourcePersistenceException;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDAO implements CrudDAO<AppUser> {
 
@@ -16,28 +21,31 @@ public class UserDAO implements CrudDAO<AppUser> {
     }
 
     public AppUser findUserByUsernameAndPassword(String username, String password) {
-        try {
-            BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
-            String dataCursor;
-            while ((dataCursor = dataReader.readLine()) != null) {
-                String[] recordFragments = dataCursor.split(":");
-                if (recordFragments[4].equals(username) && recordFragments[5].equals(password)) {
-                    AppUser authUser = new AppUser();
-                    authUser.setId(recordFragments[0]);
-                    authUser.setFirstName(recordFragments[1]);
-                    authUser.setLastName(recordFragments[2]);
-                    authUser.setEmail(recordFragments[3]);
-                    authUser.setUsername(recordFragments[4]);
-                    authUser.setPassword(recordFragments[5]);
-                    return authUser;
-                }
+
+        AppUser authUser = null;
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM app_users WHERE username = ? AND password = ?");
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                authUser = new AppUser();
+                authUser.setId(rs.getString("id"));
+                authUser.setFirstName(rs.getString("first_name"));
+                authUser.setLastName(rs.getString("last_name"));
+                authUser.setEmail(rs.getString("email"));
+                authUser.setUsername(rs.getString("username"));
+                authUser.setPassword(rs.getString("password"));
+                // TODO fix AppUser to include role
             }
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred when accessing the data file.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        return null;
-
+        return authUser;
     }
 
     @Override
