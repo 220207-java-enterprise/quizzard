@@ -6,6 +6,10 @@ public class ResourcePersistenceException extends RuntimeException {
         super("The provided resource could not be persisted to the datasource.", cause);
     }
 
+    public ResourcePersistenceException(String msg) {
+        super(msg);
+    }
+
     public ResourcePersistenceException(String msg, Throwable cause) {
         super(msg, cause);
     }
