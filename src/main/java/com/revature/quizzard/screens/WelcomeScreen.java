@@ -16,7 +16,7 @@ public class WelcomeScreen extends Screen {
     }
 
     @Override
-    public void render() throws IOException {
+    public void render() {
 
         String welcomeMenu = "Welcome to Quizzard!\n" +
                 "Please make a selection from the options below:\n" +
