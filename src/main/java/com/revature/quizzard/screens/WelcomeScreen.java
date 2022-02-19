@@ -16,7 +16,7 @@ public class WelcomeScreen extends Screen {
     }
 
     @Override
-    public void render() {
+    public void render() throws IOException {
 
         String welcomeMenu = "Welcome to Quizzard!\n" +
                 "Please make a selection from the options below:\n" +
@@ -27,27 +27,20 @@ public class WelcomeScreen extends Screen {
 
         System.out.print(welcomeMenu);
 
-        try {
+        String userSelection = consoleReader.readLine();
 
-            String userSelection = consoleReader.readLine();
-
-            switch (userSelection) {
-                case "1":
-                    screenRouter.navigate("/login");
-                    break;
-                case "2":
-                    screenRouter.navigate("/register");
-                    break;
-                case "3":
-                    AppState.shutdown();
-                    return;
-
-                default:
-                    System.out.println("You have made an incorrect selection");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        switch (userSelection) {
+            case "1":
+                screenRouter.navigate("/login");
+                break;
+            case "2":
+                screenRouter.navigate("/register");
+                break;
+            case "3":
+                AppState.shutdown();
+                return;
+            default:
+                System.out.println("You have made an incorrect selection");
         }
 
     }

@@ -5,7 +5,6 @@ import com.revature.quizzard.services.UserService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class LoginScreen extends Screen {
 
@@ -28,7 +27,7 @@ public class LoginScreen extends Screen {
         String password = consoleReader.readLine();
 
         AppUser authenticatedUser = userService.login(username, password);
-        System.out.println(authenticatedUser);
+        System.out.println(authenticatedUser); // TODO go somewhere from here?
 
     }
 }

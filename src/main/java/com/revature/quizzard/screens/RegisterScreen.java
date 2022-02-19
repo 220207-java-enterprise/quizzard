@@ -36,7 +36,7 @@ public class RegisterScreen extends Screen {
         String password = consoleReader.readLine();
 
         AppUser newUser = new AppUser(firstName, lastName, email, username, password);
-        AppUser registeredUser = userService.register(newUser); // TODO should this return something?
+        AppUser registeredUser = userService.register(newUser); // TODO handle any possible exceptions
         System.out.println(registeredUser);
 
     }
