@@ -2,22 +2,69 @@ package com.revature.quizzard.daos;
 
 import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.util.ConnectionFactory;
+import com.revature.quizzard.util.exceptions.DataSourceException;
 import com.revature.quizzard.util.exceptions.ResourcePersistenceException;
 
-import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
+// TODO attempt to centralize exception handling in service layer
 public class UserDAO implements CrudDAO<AppUser> {
 
     public AppUser findUserByUsername(String username) {
-        return null;
+
+        AppUser user = null;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM app_users WHERE username = ?");
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                user = new AppUser();
+                user.setId(rs.getString("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                // TODO fix AppUser to include role
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
     }
 
     public AppUser findUserByEmail(String email) {
-        return null;
+
+        AppUser user = null;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM app_users WHERE email = ?");
+            pstmt.setString(1, email);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                user = new AppUser();
+                user.setId(rs.getString("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                // TODO fix AppUser to include role
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+
     }
 
     public AppUser findUserByUsernameAndPassword(String username, String password) {
@@ -25,6 +72,7 @@ public class UserDAO implements CrudDAO<AppUser> {
         System.out.println("findUserByUsernameAndPassword was invoked!!!!!");
 
         AppUser authUser = null;
+
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM app_users WHERE username = ? AND password = ?");
@@ -32,7 +80,7 @@ public class UserDAO implements CrudDAO<AppUser> {
             pstmt.setString(2, password);
 
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 authUser = new AppUser();
                 authUser.setId(rs.getString("id"));
                 authUser.setFirstName(rs.getString("first_name"));
@@ -44,7 +92,7 @@ public class UserDAO implements CrudDAO<AppUser> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataSourceException(e);
         }
 
         return authUser;
@@ -68,33 +116,130 @@ public class UserDAO implements CrudDAO<AppUser> {
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted != 1) {
                 conn.rollback();
-                throw new RuntimeException("Failed to persist user to data source");
+                throw new ResourcePersistenceException("Failed to persist user to data source");
             }
 
             conn.commit();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataSourceException(e);
         }
     }
 
     @Override
     public AppUser getById(String id) {
-        return null;
+
+        AppUser user = null;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM app_users WHERE id = ?");
+            pstmt.setString(1, id);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                user = new AppUser();
+                user.setId(rs.getString("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                // TODO fix AppUser to include role
+            }
+
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+
+        return user;
+
     }
 
-    @Override
+    @Override // TODO this should probably return a dynamically size
     public AppUser[] getAll() {
-        return new AppUser[0];
+
+        AppUser[] users;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            Statement getRecordCount = conn.createStatement();
+            ResultSet countResult = getRecordCount.executeQuery("SELECT COUNT(*) FROM app_users");
+            countResult.next();
+            int userCount = countResult.getInt("count");
+            users = new AppUser[userCount];
+
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM app_users");
+            for (int i = 0; i <= userCount; i++, rs.next()) {
+                AppUser user = new AppUser();
+                user.setId(rs.getString("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                // TODO include role
+                users[i] = user;
+            }
+
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+
+        return users;
     }
 
     @Override
-    public void update(AppUser updatedObject) {
+    public void update(AppUser updatedUser) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
+            conn.setAutoCommit(false);
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE app_users " +
+                                                            "SET first_name = ?, " +
+                                                                "last_name = ?, " +
+                                                                "email = ?, " +
+                                                                "username = ?, " +
+                                                                "password = ? " +
+                                                            "WHERE id = ?");
+            pstmt.setString(1, updatedUser.getFirstName());
+            pstmt.setString(2, updatedUser.getLastName());
+            pstmt.setString(3, updatedUser.getEmail());
+            pstmt.setString(4, updatedUser.getUsername());
+            pstmt.setString(5, updatedUser.getPassword());
+            pstmt.setString(6, updatedUser.getId());
+
+            // TODO allow role to be updated as well
+
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted != 1) {
+                throw new ResourcePersistenceException("Failed to update user data within datasource.");
+            }
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
     }
 
     @Override
     public void deleteById(String id) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
+            conn.setAutoCommit(false);
+            PreparedStatement pstmt = conn.prepareStatement("DELETE FROM app_users WHERE id = ?");
+            pstmt.setString(1, id);
+
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted != 1) {
+                conn.rollback();
+                throw new ResourcePersistenceException("Failed to delete user from data source");
+            }
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
     }
 }

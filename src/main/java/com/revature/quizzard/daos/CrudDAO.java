@@ -1,15 +1,10 @@
 package com.revature.quizzard.daos;
 
-// Interfaces are implicitly abstract
-// Do NOT declare constructors
 public interface CrudDAO<T> {
 
-    // all declared interface variables are implicitly: public, static, and final
-
-    // all declared method stubs are implicitly: public and abstract
     void save(T newObject);
     T getById(String id);
-    T[] getAll();
+    T[] getAll(); // TODO return a dynamically sizeable
     void update(T updatedObject);
     void deleteById(String id);
 
