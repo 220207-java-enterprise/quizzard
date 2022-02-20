@@ -3,6 +3,7 @@ package com.revature.quizzard;
 import com.revature.quizzard.screen.LoginScreen;
 import com.revature.quizzard.screen.RegisterScreen;
 
+
 import java.io.*;
 import java.util.Locale;
 import java.util.Scanner;

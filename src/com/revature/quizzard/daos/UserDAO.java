@@ -1,9 +1,14 @@
 package com.revature.quizzard.daos;
 
 import com.revature.quizzard.models.AppUser;
+import com.revature.quizzard.util.ConnectionFactory;
 import com.revature.quizzard.util.exceptions.ResourcePersistenceException;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDAO implements CrudDAO<AppUser> {
     public AppUser findUserByUsername(String username){
@@ -14,31 +19,37 @@ public class UserDAO implements CrudDAO<AppUser> {
         return null;
     }
 
-    public AppUser findUserByUsernameAndPassword(String username, String password) throws IOException {
-        // Persistence logic
-        try {
-            BufferedReader dataReader = new BufferedReader(new FileReader("data/users.txt"));
-            String dataCursor;
 
-            while ((dataCursor = dataReader.readLine()) != null) {
-                String[] recordFragments = dataCursor.split(":");
-                if (recordFragments[4].equals(username) && recordFragments[5].equals(password)) {
-                    AppUser authUser = new AppUser();
-                    authUser.setId(recordFragments[0]);
-                    authUser.setFirstName(recordFragments[1]);
-                    authUser.setLastName(recordFragments[2]);
-                    authUser.setEmail(recordFragments[3]);
-                    authUser.setUsername(recordFragments[4]);
-                    authUser.setPassword(recordFragments[5]);
-                    return authUser;
-                }
+    public AppUser findUserByUsernameAndPassword(String username, String password) {
+
+        // store user after executing query
+        AppUser authUser =null;
+
+        // create a connection with syntactic sugar for the try block (no need to close the connection inside "finally")
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
+            // new PreparedStatement that accepts SQL query
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM app_users WHERE username=? AND password=?");
+            // load values for username and password to query
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            ResultSet rs = pstmt.executeQuery();
+            // ResultSet iteration using next()
+            while(rs.next()){
+                authUser = new AppUser();
+                authUser.setId(rs.getString("id"));
+                authUser.setFirstName(rs.getString("first_name"));
+                authUser.setLastName(rs.getString("last_name"));
+                authUser.setEmail(rs.getString("email"));
+                authUser.setUsername(rs.getString("username"));
+                authUser.setPassword(rs.getString("password"));
+                //todo fix appUser to include role
             }
-        } catch (IOException e){
-            throw new ResourcePersistenceException("An error occured when accessing the data file.");
+        } catch (SQLException e){
+            e.printStackTrace();
         }
 
-        System.out.println("User not found");
-        return null;
+        return authUser;
     }
 
 

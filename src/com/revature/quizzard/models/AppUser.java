@@ -16,6 +16,7 @@ public class AppUser {
     private String username;
     private String password;
 
+    // todo create a Role enum
 
     // constructors
     public AppUser(){
