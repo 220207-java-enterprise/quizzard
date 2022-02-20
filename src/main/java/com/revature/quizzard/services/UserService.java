@@ -23,7 +23,7 @@ public class UserService {
         return newUser;
     }
 
-    public AppUser login(String username, String password) throws IOException {
+    public AppUser login(String username, String password){
         // Business logic
         if(!isUsernameValid(username) || !isPasswordValid(password)){
             throw new RuntimeException("Invalid credentials provided");

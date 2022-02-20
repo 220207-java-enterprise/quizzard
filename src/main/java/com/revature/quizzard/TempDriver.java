@@ -15,7 +15,7 @@ public class TempDriver {
         ConnectionFactory connFactory2 = ConnectionFactory.getInstance();
 
         //returns true because both instances point to same object in memory. Hence, Singleton Design Pattern
-        System.out.println(connFactory==connFactory2);
+        //System.out.println(connFactory==connFactory2);
 
         Connection conn = null;
         try {

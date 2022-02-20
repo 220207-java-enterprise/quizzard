@@ -1,14 +1,14 @@
 package com.revature.quizzard.services;
 
-import com.revature.quizzard.test_utils.BeforeEach;
-import com.revature.quizzard.test_utils.Describe;
-import com.revature.quizzard.test_utils.Test;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 // Test Suite
 // A class that encapsulates one or more test methods (cases)
 // Because the package structure of our test directory mirrors the src directory,
 // Java's compiler and JVM look at this class as if it is in the same package as UserService.java
-@Describe
+
 public class UserServiceTest {
 
     // we can access UserService methods
@@ -16,42 +16,82 @@ public class UserServiceTest {
     private UserService sut; //sut = System Under Test
 
     // to be invoked before each
-    @BeforeEach
+    @Before
     public void setup(){
-        System.out.println("Inside of @BeforeEach");
         sut = new UserService();
     }
 
     @Test
-    public void test_isEmptyStringValidUsername(){
-        System.out.println("Inside of test_isEmptyStringValidUsername");
+    public void test_isUsernameValid_returnsFalse_givenEmptyString(){
         // AAA structure for testing:
         // Arrange
         String username ="";
-        boolean expected = false;
-
         // Act
         boolean result = sut.isUsernameValid(username);
-
         // Assert
-        if (result != expected){
-            throw new RuntimeException("Test Failed! Expected result to be false.");
-        }
+        Assert.assertFalse(result);
     }
 
     @Test
-    public void test_isNullStringValidUsername(){
-        System.out.println("Inside of test_isNullStringValidUsername()");
+    public void test_isUsernameValid_returnsFalse_givenNullString(){
         // Arrange
         String username = null;
-        boolean expected = false;
-
         // Act
         boolean result = sut.isUsernameValid(username);
-
         // Assert
-        if (result != expected){
-            throw new RuntimeException("Test Failed! Expected result to be false.");
-        }
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void test_isUsernameValid_returnsFalse_givenShortUsername(){
+        //Arrange
+        String username="short";
+        //Act
+        boolean result = sut.isUsernameValid(username);
+        //Assert
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void test_isUsernameValid_returnsFalse_givenLongUsername(){
+        //Arrange
+        String username="waytoolongofausernameforourapplication";
+        //Act
+        boolean result = sut.isUsernameValid(username);
+        //Assert
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void test_isUsernameValid_returnsFalse_givenUsernameWithIllegalCharacters(){
+        //Arrange
+        String username="tester99!";
+        //Act
+        boolean result = sut.isUsernameValid(username);
+        //Assert
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void test_isUsernameValid_returnsTrue_givenValidUsername(){
+        //Arrange
+        String username="4bhilekh";
+        //Act
+        boolean result = sut.isUsernameValid(username);
+        //Assert
+        Assert.assertTrue(result);
+    }
+
+
+    // TODO mock UserDAO so this is a proper unit test
+    @Test(expected=RuntimeException.class)
+    public void test_login_throwsRuntimeException_givenUnknownUserCredentials(){
+        //Arrange
+        String unknownUsername="unknownuser";
+        String somePassword = "p4$$WORD";
+        //Act
+        sut.login(unknownUsername,somePassword);
+        //Assert
+        //Assert.assertFalse(result);
     }
 }
