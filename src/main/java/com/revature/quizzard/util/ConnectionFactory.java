@@ -37,7 +37,7 @@ public class ConnectionFactory { // Design Patterns implemented - Factory and Si
     // pass props from application.properties file to hide database url,username and password
     private ConnectionFactory(){
         try {
-            props.load(new FileReader("resources/application.properties"));
+            props.load(new FileReader("src/main/resources/application.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
