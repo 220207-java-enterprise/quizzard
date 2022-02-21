@@ -28,12 +28,16 @@ public class UserServiceTest {
      */
 
     private UserService sut; // sut = System Under Test
-    private UserDAO mockUserDao;
+    private UserDAO mockUserDao = mock(UserDAO.class);
 
     @Before
     public void setup() {
-        mockUserDao = mock(UserDAO.class);
         sut = new UserService(mockUserDao); // TODO UserDAO needs to be mocked
+    }
+
+    @After
+    public void cleanUp() {
+        reset(mockUserDao);
     }
 
     @Test
