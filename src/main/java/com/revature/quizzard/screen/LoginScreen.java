@@ -6,17 +6,19 @@ import com.revature.quizzard.services.UserService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.Buffer;
 
 public class LoginScreen extends Screen{
 
-    private  UserService userService = new UserService();
-    public LoginScreen(){
-        super("/login");
+    private final UserService userService;
+
+    public LoginScreen(BufferedReader consoleReader, UserService userService){
+        super("/login", consoleReader);
+        this.userService = userService;
     }
+
     @Override
     public void render() throws IOException {
-
-        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Please provide your account credentials to login to your account:");
 
         // UI logic

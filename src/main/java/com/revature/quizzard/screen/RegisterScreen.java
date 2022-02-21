@@ -7,15 +7,14 @@ import java.io.*;
 
 public class RegisterScreen extends Screen{
 
-    private final UserService userService = new UserService();
+    private final UserService userService;
 
-    public RegisterScreen(){
-        super("/register");
+    public RegisterScreen(BufferedReader consoleReader, UserService userService){
+        super("/register", consoleReader);
+        this.userService = userService;
     }
     @Override
     public void render() throws IOException {
-
-        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.println("You selected: Register");
         System.out.println("Please provide some basic information to register an account:");

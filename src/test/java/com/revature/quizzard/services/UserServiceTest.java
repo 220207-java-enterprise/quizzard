@@ -1,5 +1,6 @@
 package com.revature.quizzard.services;
 
+import com.revature.quizzard.daos.UserDAO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class UserServiceTest {
     // to be invoked before each
     @Before
     public void setup(){
-        sut = new UserService();
+        sut = new UserService(new UserDAO()); //TODO UserDAO needs to be mocked
     }
 
     @Test

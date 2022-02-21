@@ -8,7 +8,17 @@ import java.util.UUID;
 
 public class UserService {
 
-    private final UserDAO userDAO = new UserDAO();
+    private UserDAO userDAO;  // a dependency of UserService
+
+    // constructor injection so we can pass a mock version of userDAO for test
+    public UserService(UserDAO userDAO){
+        this.userDAO = userDAO;
+    }
+
+    // setter injection
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     public AppUser register(AppUser newUser) throws IOException {
         System.out.printf("Registration info provided: %s\n", newUser.toString());
