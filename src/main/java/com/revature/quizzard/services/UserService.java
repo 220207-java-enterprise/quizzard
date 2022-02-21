@@ -17,11 +17,6 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    // Setter injection
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
-
     public AppUser register(AppUser newUser) throws IOException {
 
         if (!isUserValid(newUser)) {
@@ -85,12 +80,14 @@ public class UserService {
     }
 
     public boolean isUsernameValid(String username) {
-        if (username == null) return false;
-        return username.matches("^[a-zA-Z0-9]{8,25}");
+//        if (username == null) return false;
+//        return username.matches("^[a-zA-Z0-9]{8,25}");
+        return false;
     }
 
     public boolean isPasswordValid(String password) {
-        return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
+//        return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
+        return false;
     }
 
 }
