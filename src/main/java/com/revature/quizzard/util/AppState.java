@@ -22,7 +22,7 @@ public class AppState {
     private final ScreenRouter router;
 
     public AppState(){
-        System.out.printf("Application initialization started at %s", LocalDateTime.now());
+        System.out.printf("Application initialization started at %s\n", LocalDateTime.now());
 
         appRunning = true;
         BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
@@ -36,7 +36,7 @@ public class AppState {
         router.addScreen(new LoginScreen(consoleReader, userService)); // TODO use router
         router.addScreen(new RegisterScreen(consoleReader, userService)); // TODO use router
 
-        System.out.printf("Application initialization started at %s\n", LocalDateTime.now());
+        System.out.printf("Application initialization ended at %s\n", LocalDateTime.now());
     }
 
     public void startup(){
