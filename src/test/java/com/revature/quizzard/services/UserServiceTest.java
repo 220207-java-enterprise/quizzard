@@ -140,8 +140,12 @@ public class UserServiceTest {
     public void test_login_throwsAuthenticationException_givenUnknownUserCredentials() {
 
         // Arrange
+        UserService spiedSut = Mockito.spy(sut);
+
         String unknownUsername = "unknownuser";
         String somePassword = "p4$$W0RD";
+        when(spiedSut.isUsernameValid(unknownUsername)).thenReturn(true);
+        when(spiedSut.isPasswordValid(somePassword)).thenReturn(true);
         when(mockUserDao.findUserByUsernameAndPassword(unknownUsername, somePassword)).thenReturn(null);
 
         // Act

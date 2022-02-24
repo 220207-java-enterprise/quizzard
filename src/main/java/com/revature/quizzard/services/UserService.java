@@ -80,14 +80,12 @@ public class UserService {
     }
 
     public boolean isUsernameValid(String username) {
-//        if (username == null) return false;
-//        return username.matches("^[a-zA-Z0-9]{8,25}");
-        return false;
+        if (username == null) return false;
+        return username.matches("^[a-zA-Z0-9]{8,25}");
     }
 
     public boolean isPasswordValid(String password) {
-//        return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
-        return false;
+        return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
     }
 
 }

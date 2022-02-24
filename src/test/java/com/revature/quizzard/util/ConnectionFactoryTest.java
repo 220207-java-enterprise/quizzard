@@ -10,8 +10,7 @@ public class ConnectionFactoryTest {
     @Test
     public void test_getConnection_returnsValidConnection_givenThatPropertiesFileExistsWithCorrectInfo() {
         try {
-            assertNotNull(ConnectionFactory.getInstance()
-                                           .getConnection());
+            assertNotNull(ConnectionFactory.getInstance().getConnection());
         } catch (Throwable t) {
             fail();
         }
