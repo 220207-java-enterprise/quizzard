@@ -2,6 +2,7 @@ package com.revature.quizzard.util;
 
 import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.services.UserService;
+import com.revature.quizzard.servlets.AuthServlet;
 import com.revature.quizzard.servlets.UserServlet;
 
 import javax.servlet.ServletContext;
@@ -18,9 +19,12 @@ public class ContextLoaderListener implements ServletContextListener {
         UserService userService = new UserService(userDAO);
         UserServlet userServlet = new UserServlet(userService);
 
+        AuthServlet authServlet = new AuthServlet(userService);
+
         // Programmatic Servlet Registration
         ServletContext context = sce.getServletContext();
         context.addServlet("UserServlet", userServlet).addMapping("/users/*");
+        context.addServlet("AuthServlet", authServlet).addMapping("/auth");
 
     }
 

@@ -8,25 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserServlet extends HttpServlet {
+public class AuthServlet extends HttpServlet {
 
     private UserService userService;
 
-    public UserServlet(UserService userService) {
+    public AuthServlet(UserService userService) {
         this.userService = userService;
     }
 
-    // get users (either get all or by id, or w/e)
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("<h1>/users works!</h1>");
-        System.out.println(userService.isUsernameValid("tester99"));
-    }
-
-    // registration endpoint
+    // Login endpoint
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("<h1>post to /users works!</h1>");
+        resp.getWriter().write("<h1>post to /auth works!</h1>");
     }
 
 }
