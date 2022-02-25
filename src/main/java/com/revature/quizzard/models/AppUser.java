@@ -17,7 +17,7 @@ public class AppUser {
     // TODO create a Role enum
 
     public AppUser() {
-        super(); // not required, but it bugs me personally not to have it
+        super();
     }
 
     public AppUser(String firstName, String lastName, String email, String username, String password) {

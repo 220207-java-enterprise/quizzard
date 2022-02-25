@@ -60,7 +60,7 @@ public class UserDAO implements CrudDAO<AppUser> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataSourceException(e);
         }
 
         return user;
@@ -68,8 +68,6 @@ public class UserDAO implements CrudDAO<AppUser> {
     }
 
     public AppUser findUserByUsernameAndPassword(String username, String password) {
-
-        System.out.println("findUserByUsernameAndPassword was invoked!!!!!");
 
         AppUser authUser = null;
 

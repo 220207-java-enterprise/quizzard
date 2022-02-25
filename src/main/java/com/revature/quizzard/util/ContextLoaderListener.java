@@ -1,5 +1,6 @@
 package com.revature.quizzard.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.servlets.AuthServlet;
@@ -15,11 +16,12 @@ public class ContextLoaderListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("Initializing Quizzard web application");
 
+        ObjectMapper mapper = new ObjectMapper();
+
         UserDAO userDAO = new UserDAO();
         UserService userService = new UserService(userDAO);
-        UserServlet userServlet = new UserServlet(userService);
-
-        AuthServlet authServlet = new AuthServlet(userService);
+        UserServlet userServlet = new UserServlet(userService, mapper);
+        AuthServlet authServlet = new AuthServlet(userService, mapper);
 
         // Programmatic Servlet Registration
         ServletContext context = sce.getServletContext();
@@ -32,4 +34,5 @@ public class ContextLoaderListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
         System.out.println("Shutting down Quizzard web application");
     }
+
 }

@@ -1,9 +1,12 @@
 package com.revature.quizzard.services;
 
+import com.revature.quizzard.dtos.NewUserRequest;
 import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
+import com.revature.quizzard.util.exceptions.ResourceConflictException;
+import com.revature.quizzard.util.exceptions.ResourcePersistenceException;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -17,13 +20,23 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public AppUser register(AppUser newUser) throws IOException {
+    public AppUser register(NewUserRequest newUserRequest) throws IOException {
+
+        AppUser newUser = newUserRequest.extractUser();
 
         if (!isUserValid(newUser)) {
-            throw new InvalidRequestException("Bad registration details given."); // this will halt the app
+            throw new InvalidRequestException("Bad registration details given.");
         }
 
-        // TODO validate that the provided username and email are not already taken
+        boolean usernameAvailable = isUsernameAvailable(newUser.getUsername());
+        boolean emailAvailable = isEmailAvailable(newUser.getEmail());
+
+        if (!usernameAvailable || !emailAvailable) {
+            String msg = "The values provided for the following fields are already taken by other users: ";
+            if (!usernameAvailable) msg += "username ";
+            if (!emailAvailable) msg += "email";
+            throw new ResourceConflictException(msg);
+        }
 
         // TODO encrypt provided password before storing in the database
 
@@ -86,6 +99,14 @@ public class UserService {
 
     public boolean isPasswordValid(String password) {
         return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
+    }
+
+    public boolean isUsernameAvailable(String username) {
+        return userDAO.findUserByUsername(username) == null;
+    }
+
+    public boolean isEmailAvailable(String username) {
+        return userDAO.findUserByUsername(username) == null;
     }
 
 }
