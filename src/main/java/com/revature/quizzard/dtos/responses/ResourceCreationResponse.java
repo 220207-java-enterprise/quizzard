@@ -1,4 +1,4 @@
-package com.revature.quizzard.dtos;
+package com.revature.quizzard.dtos.responses;
 
 public class ResourceCreationResponse {
 

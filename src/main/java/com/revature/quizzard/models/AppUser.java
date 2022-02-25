@@ -13,8 +13,7 @@ public class AppUser {
     private String email;
     private String username;
     private String password;
-
-    // TODO create a Role enum
+    private UserRole role;
 
     public AppUser() {
         super();
@@ -76,13 +75,12 @@ public class AppUser {
         this.password = password;
     }
 
-    public String toFileString() {
-        return new StringBuilder(id).append(":")
-                .append(firstName).append(":")
-                .append(lastName).append(":")
-                .append(email).append(":")
-                .append(username).append(":")
-                .append(password).toString();
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override
@@ -90,12 +88,18 @@ public class AppUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppUser appUser = (AppUser) o;
-        return Objects.equals(id, appUser.id) && Objects.equals(firstName, appUser.firstName) && Objects.equals(lastName, appUser.lastName) && Objects.equals(email, appUser.email) && Objects.equals(username, appUser.username) && Objects.equals(password, appUser.password);
+        return Objects.equals(id, appUser.id)
+                && Objects.equals(firstName, appUser.firstName)
+                && Objects.equals(lastName, appUser.lastName)
+                && Objects.equals(email, appUser.email)
+                && Objects.equals(username, appUser.username)
+                && Objects.equals(password, appUser.password)
+                && Objects.equals(role, appUser.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password);
+        return Objects.hash(id, firstName, lastName, email, username, password, role);
     }
 
     @Override
@@ -107,6 +111,7 @@ public class AppUser {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", role=" + role +
                 '}';
     }
 

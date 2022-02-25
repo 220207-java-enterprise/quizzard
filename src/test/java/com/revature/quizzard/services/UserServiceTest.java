@@ -3,6 +3,7 @@ package com.revature.quizzard.services;
 // Test Suite
 // A class that encapsulates one or more test methods (cases)
 import com.revature.quizzard.daos.UserDAO;
+import com.revature.quizzard.dtos.requests.LoginRequest;
 import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
@@ -92,14 +93,13 @@ public class UserServiceTest {
     public void test_login_throwsInvalidRequestExceptionAndDoesNotInvokeUserDao_givenInvalidUsername() {
 
         // Arrange
-        String invalidUsername = "no";
-        String validPassword = "p4$$W0RD";
+        LoginRequest loginRequest = new LoginRequest("no", "p4$$W0RD");
 
         // Act
         try {
-            sut.login(invalidUsername, validPassword);
+            sut.login(loginRequest);
         } finally {
-            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(invalidUsername, validPassword);
+            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         }
 
     }
@@ -108,14 +108,13 @@ public class UserServiceTest {
     public void test_login_throwsInvalidRequestExceptionAndDoesNotInvokeUserDao_givenInvalidPassword() {
 
         // Arrange
-        String invalidUsername = "tester99";
-        String validPassword = "invalid";
+        LoginRequest loginRequest = new LoginRequest("tester99", "invalid");
 
         // Act
         try {
-            sut.login(invalidUsername, validPassword);
+            sut.login(loginRequest);
         } finally {
-            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(invalidUsername, validPassword);
+            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         }
 
     }
@@ -124,14 +123,13 @@ public class UserServiceTest {
     public void test_login_throwsInvalidRequestExceptionAndDoesNotInvokeUserDao_givenInvalidUsernameAndPassword() {
 
         // Arrange
-        String invalidUsername = "invalid";
-        String validPassword = "invalid";
+        LoginRequest loginRequest = new LoginRequest("invalid", "invalid");
 
         // Act
         try {
-            sut.login(invalidUsername, validPassword);
+            sut.login(loginRequest);
         } finally {
-            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(invalidUsername, validPassword);
+            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         }
 
     }
@@ -142,14 +140,14 @@ public class UserServiceTest {
         // Arrange
         UserService spiedSut = Mockito.spy(sut);
 
-        String unknownUsername = "unknownuser";
-        String somePassword = "p4$$W0RD";
-        when(spiedSut.isUsernameValid(unknownUsername)).thenReturn(true);
-        when(spiedSut.isPasswordValid(somePassword)).thenReturn(true);
-        when(mockUserDao.findUserByUsernameAndPassword(unknownUsername, somePassword)).thenReturn(null);
+        LoginRequest loginRequest = new LoginRequest("unknownuser", "p4$$W0RD");
+
+        when(spiedSut.isUsernameValid(loginRequest.getUsername())).thenReturn(true);
+        when(spiedSut.isPasswordValid(loginRequest.getPassword())).thenReturn(true);
+        when(mockUserDao.findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(null);
 
         // Act
-        sut.login(unknownUsername, somePassword);
+        sut.login(loginRequest);
 
     }
 
@@ -159,20 +157,20 @@ public class UserServiceTest {
         // Arrange
         UserService spiedSut = Mockito.spy(sut);
 
-        String validUsername = "tester99";
-        String validPassword = "p4$$W0RD";
-        when(spiedSut.isUsernameValid(validUsername)).thenReturn(true);
-        when(spiedSut.isPasswordValid(validPassword)).thenReturn(true);
-        when(mockUserDao.findUserByUsernameAndPassword(validUsername, validPassword)).thenReturn(new AppUser());
+        LoginRequest loginRequest = new LoginRequest("tester99", "p4$$W0RD");
+
+        when(spiedSut.isUsernameValid(loginRequest.getUsername())).thenReturn(true);
+        when(spiedSut.isPasswordValid(loginRequest.getPassword())).thenReturn(true);
+        when(mockUserDao.findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(new AppUser());
 
         // Act
-        AppUser loginResult = spiedSut.login(validUsername, validPassword);
+        AppUser loginResult = spiedSut.login(loginRequest);
 
         // Assert
         assertNotNull(loginResult);
-        verify(mockUserDao, times(1)).findUserByUsernameAndPassword(validUsername, validPassword);
-        verify(spiedSut, times(1)).isUsernameValid(validUsername);
-        verify(spiedSut, times(1)).isPasswordValid(validPassword);
+        verify(mockUserDao, times(1)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+        verify(spiedSut, times(1)).isUsernameValid(loginRequest.getUsername());
+        verify(spiedSut, times(1)).isPasswordValid(loginRequest.getPassword());
 
     }
 

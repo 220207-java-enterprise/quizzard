@@ -2,6 +2,8 @@ package com.revature.quizzard.daos;
 
 import com.revature.quizzard.models.Flashcard;
 
+import java.util.List;
+
 public class FlashcardDAO implements CrudDAO<Flashcard> {
 
     @Override
@@ -15,8 +17,8 @@ public class FlashcardDAO implements CrudDAO<Flashcard> {
     }
 
     @Override
-    public Flashcard[] getAll() {
-        return new Flashcard[0];
+    public List<Flashcard> getAll() {
+        return null;
     }
 
     @Override

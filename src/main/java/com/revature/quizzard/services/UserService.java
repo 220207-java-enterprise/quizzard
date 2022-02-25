@@ -1,15 +1,20 @@
 package com.revature.quizzard.services;
 
-import com.revature.quizzard.dtos.NewUserRequest;
+import com.revature.quizzard.dtos.requests.LoginRequest;
+import com.revature.quizzard.dtos.requests.NewUserRequest;
+import com.revature.quizzard.dtos.responses.AppUserResponse;
 import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.daos.UserDAO;
+import com.revature.quizzard.models.UserRole;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
 import com.revature.quizzard.util.exceptions.ResourceConflictException;
-import com.revature.quizzard.util.exceptions.ResourcePersistenceException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class UserService {
 
@@ -18,6 +23,23 @@ public class UserService {
     // Constructor injection
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    public List<AppUserResponse> getAllUsers() {
+
+        // Pre-Java 8 mapping logic (without Streams)
+//        List<AppUser> users = userDAO.getAll();
+//        List<AppUserResponse> userResponses = new ArrayList<>();
+//        for (AppUser user : users) {
+//            userResponses.add(new AppUserResponse(user));
+//        }
+//        return userResponses;
+
+        // Java 8+ mapping logic (with Streams)
+        return userDAO.getAll()
+                      .stream()
+                      .map(AppUserResponse::new)
+                      .collect(Collectors.toList());
     }
 
     public AppUser register(NewUserRequest newUserRequest) throws IOException {
@@ -41,12 +63,16 @@ public class UserService {
         // TODO encrypt provided password before storing in the database
 
         newUser.setId(UUID.randomUUID().toString());
+        newUser.setRole(new UserRole("7c3521f5-ff75-4e8a-9913-01d15ee4dc97", "BASIC_USER")); // All newly registered users start as BASIC_USER
         userDAO.save(newUser);
 
         return newUser;
     }
 
-    public AppUser login(String username, String password) {
+    public AppUser login(LoginRequest loginRequest) {
+
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
 
         if (!isUsernameValid(username) || !isPasswordValid(password)) {
             throw new InvalidRequestException("Invalid credentials provided!");
@@ -105,8 +131,8 @@ public class UserService {
         return userDAO.findUserByUsername(username) == null;
     }
 
-    public boolean isEmailAvailable(String username) {
-        return userDAO.findUserByUsername(username) == null;
+    public boolean isEmailAvailable(String email) {
+        return userDAO.findUserByEmail(email) == null;
     }
 
 }
