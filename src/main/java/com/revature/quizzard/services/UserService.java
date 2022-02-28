@@ -38,8 +38,8 @@ public class UserService {
         // Java 8+ mapping logic (with Streams)
         return userDAO.getAll()
                       .stream()
-                      .map(AppUserResponse::new)
-                      .collect(Collectors.toList());
+                      .map(AppUserResponse::new) // intermediate operation
+                      .collect(Collectors.toList()); // terminal operation
     }
 
     public AppUser register(NewUserRequest newUserRequest) throws IOException {
