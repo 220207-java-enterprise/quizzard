@@ -7,6 +7,7 @@ import com.revature.quizzard.dtos.responses.AppUserResponse;
 import com.revature.quizzard.dtos.responses.Principal;
 import com.revature.quizzard.dtos.responses.ResourceCreationResponse;
 import com.revature.quizzard.models.AppUser;
+import com.revature.quizzard.services.TokenService;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
 import com.revature.quizzard.util.exceptions.ResourceConflictException;
@@ -23,10 +24,12 @@ import java.util.List;
 // Mapping: /users/*
 public class UserServlet extends HttpServlet {
 
+    private final TokenService tokenService;
     private final UserService userService;
     private final ObjectMapper mapper;
 
-    public UserServlet(UserService userService, ObjectMapper mapper) {
+    public UserServlet(TokenService tokenService, UserService userService, ObjectMapper mapper) {
+        this.tokenService = tokenService;
         this.userService = userService;
         this.mapper = mapper;
     }
@@ -43,16 +46,22 @@ public class UserServlet extends HttpServlet {
         // TODO implement some security logic here to protect sensitive operations
 
         // get users (all, by id, by w/e)
-        HttpSession session = req.getSession(false);
-        if (session == null) {
+//        HttpSession session = req.getSession(false);
+//        if (session == null) {
+//            resp.setStatus(401);
+//            return;
+//        }
+//        Principal requester = (Principal) session.getAttribute("authUser");
+
+        Principal requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+
+        if (requester == null) {
             resp.setStatus(401);
             return;
         }
-
-        Principal requester = (Principal) session.getAttribute("authUser");
-
         if (!requester.getRole().equals("ADMIN")) {
             resp.setStatus(403); // FORBIDDEN
+            return;
         }
 
         List<AppUserResponse> users = userService.getAllUsers();

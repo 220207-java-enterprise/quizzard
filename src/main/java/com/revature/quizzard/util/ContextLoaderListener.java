@@ -2,6 +2,7 @@ package com.revature.quizzard.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.quizzard.daos.UserDAO;
+import com.revature.quizzard.services.TokenService;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.servlets.AuthServlet;
 import com.revature.quizzard.servlets.UserServlet;
@@ -17,11 +18,13 @@ public class ContextLoaderListener implements ServletContextListener {
         System.out.println("Initializing Quizzard web application");
 
         ObjectMapper mapper = new ObjectMapper();
+        JwtConfig jwtConfig = new JwtConfig();
+        TokenService tokenService = new TokenService(jwtConfig);
 
         UserDAO userDAO = new UserDAO();
         UserService userService = new UserService(userDAO);
-        UserServlet userServlet = new UserServlet(userService, mapper);
-        AuthServlet authServlet = new AuthServlet(userService, mapper);
+        UserServlet userServlet = new UserServlet(tokenService, userService, mapper);
+        AuthServlet authServlet = new AuthServlet(tokenService, userService, mapper);
 
         // Programmatic Servlet Registration
         ServletContext context = sce.getServletContext();

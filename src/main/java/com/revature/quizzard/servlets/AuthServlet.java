@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.quizzard.dtos.requests.LoginRequest;
 import com.revature.quizzard.dtos.responses.Principal;
 import com.revature.quizzard.models.AppUser;
+import com.revature.quizzard.services.TokenService;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
@@ -13,18 +14,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 public class AuthServlet extends HttpServlet {
 
+    private final TokenService tokenService;
     private final UserService userService;
     private final ObjectMapper mapper;
 
-    public AuthServlet(UserService userService, ObjectMapper mapper) {
+    public AuthServlet(TokenService tokenService, UserService userService, ObjectMapper mapper) {
+        this.tokenService = tokenService;
         this.userService = userService;
         this.mapper = mapper;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println(req.getServletContext().getInitParameter("programmaticParam"));
     }
 
     // Login endpoint
@@ -40,8 +47,11 @@ public class AuthServlet extends HttpServlet {
             String payload = mapper.writeValueAsString(principal);
 
             // Stateful session management
-            HttpSession httpSession = req.getSession();
-            httpSession.setAttribute("authUser", principal);
+//            HttpSession httpSession = req.getSession();
+//            httpSession.setAttribute("authUser", principal);
+
+            String token = tokenService.generateToken(principal);
+            resp.setHeader("Authorization", token);
             resp.setContentType("application/json");
             writer.write(payload);
 
