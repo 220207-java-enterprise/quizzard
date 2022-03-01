@@ -6,6 +6,8 @@ import com.revature.quizzard.services.TokenService;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.servlets.AuthServlet;
 import com.revature.quizzard.servlets.UserServlet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -13,9 +15,11 @@ import javax.servlet.ServletContextListener;
 
 public class ContextLoaderListener implements ServletContextListener {
 
+    private static Logger logger = LogManager.getLogger(ContextLoaderListener.class);
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("Initializing Quizzard web application");
+        logger.debug("Initializing Quizzard web application");
 
         ObjectMapper mapper = new ObjectMapper();
         JwtConfig jwtConfig = new JwtConfig();
@@ -35,7 +39,7 @@ public class ContextLoaderListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("Shutting down Quizzard web application");
+        logger.debug("Shutting down Quizzard web application");
     }
 
 }

@@ -190,9 +190,8 @@ public class UserServiceTest {
         // Arrange
         UserService spiedSut = Mockito.spy(sut);
         NewUserRequest stubbedRequest = new NewUserRequest("Tester", "McTesterson", "tester@revature.com", "tester99", "p4$$WORD");
-        AppUser extractedUser = stubbedRequest.extractUser();
         UserRole expectedRole = new UserRole("7c3521f5-ff75-4e8a-9913-01d15ee4dc97", "BASIC_USER");
-        doReturn(true).when(spiedSut).isUserValid(extractedUser);
+        doReturn(true).when(spiedSut).isUserValid(any());
         doReturn(true).when(spiedSut).isUsernameAvailable(anyString());
         doReturn(true).when(spiedSut).isEmailAvailable(anyString());
         doNothing().when(mockUserDao).save(any());
@@ -204,7 +203,7 @@ public class UserServiceTest {
         assertNotNull(registerResult);
         assertNotNull(registerResult.getId());
         assertEquals(expectedRole, registerResult.getRole());
-        verify(spiedSut, times(1)).isUserValid(extractedUser);
+        verify(spiedSut, times(1)).isUserValid(any());
         verify(spiedSut, times(1)).isUsernameAvailable(anyString());
         verify(spiedSut, times(1)).isEmailAvailable(anyString());
         verify(mockUserDao, times(1)).save(any());
