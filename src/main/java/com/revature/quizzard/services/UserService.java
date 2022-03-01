@@ -128,10 +128,12 @@ public class UserService {
     }
 
     public boolean isUsernameAvailable(String username) {
+        if (username == null || !isUsernameValid(username)) return false;
         return userDAO.findUserByUsername(username) == null;
     }
 
     public boolean isEmailAvailable(String email) {
+        if (email == null || !isEmailValid(email)) return false;
         return userDAO.findUserByEmail(email) == null;
     }
 
