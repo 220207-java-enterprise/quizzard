@@ -11,7 +11,6 @@ import com.revature.quizzard.util.exceptions.InvalidRequestException;
 import com.revature.quizzard.util.exceptions.ResourceConflictException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,7 +41,7 @@ public class UserService {
                       .collect(Collectors.toList()); // terminal operation
     }
 
-    public AppUser register(NewUserRequest newUserRequest) throws IOException {
+    public AppUser register(NewUserRequest newUserRequest) {
 
         AppUser newUser = newUserRequest.extractUser();
 
@@ -90,7 +89,7 @@ public class UserService {
 
     }
 
-    private boolean isUserValid(AppUser appUser) {
+    public boolean isUserValid(AppUser appUser) {
 
         // First name and last name are not just empty strings or filled with whitespace
         if (appUser.getFirstName().trim().equals("") || appUser.getLastName().trim().equals("")) {

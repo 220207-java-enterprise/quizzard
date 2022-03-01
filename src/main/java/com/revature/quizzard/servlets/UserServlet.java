@@ -69,7 +69,6 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.getWriter().write(payload);
 
-
     }
 
     // registration endpoint
