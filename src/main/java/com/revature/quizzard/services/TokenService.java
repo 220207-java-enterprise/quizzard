@@ -8,10 +8,15 @@ import io.jsonwebtoken.Jwts;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class TokenService {
 
     private JwtConfig jwtConfig;
 
+    // since we only have one constructor, the Autowired annotation
+    // is optional if we use constructor injection
     public TokenService(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
     }

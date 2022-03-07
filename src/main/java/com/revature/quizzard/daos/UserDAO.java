@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 // TODO attempt to centralize exception handling in service layer
 public class UserDAO implements CrudDAO<AppUser> {
 

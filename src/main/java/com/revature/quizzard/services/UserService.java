@@ -15,14 +15,37 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
 public class UserService {
 
+	/*
+	 field injection: really readable, but requires Spring to use Reflection
+	 in order to set the private field
+	 */
+	// @Autowired // field injection
     private UserDAO userDAO; // a dependency of UserService
 
-    // Constructor injection
+    /* Constructor injection: a little less readable, can't change the
+     * dependency later, but it makes the most sense logically with
+     * what a dependency is supposed to be (a requirement to create the object)
+     * 
+     * if you only have one constructor, you can leave out the Autowired annotation
+     */
+    //@Autowired
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
+    
+    /* setter injection: less readable, but allows you to change
+     * the value of the dependency later in the code if needed
+     */
+//    @Autowired
+//    public void setUserDao(UserDAO userDao) {
+//    	this.userDAO = userDao;
+//    }
 
     public List<AppUserResponse> getAllUsers() {
 

@@ -1,6 +1,7 @@
 package com.revature.quizzard.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.quizzard.config.AppConfig;
 import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.services.TokenService;
 import com.revature.quizzard.services.UserService;
@@ -8,6 +9,9 @@ import com.revature.quizzard.servlets.AuthServlet;
 import com.revature.quizzard.servlets.UserServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -16,17 +20,21 @@ import javax.servlet.ServletContextListener;
 public class ContextLoaderListener implements ServletContextListener {
 
     private static Logger logger = LogManager.getLogger(ContextLoaderListener.class);
+    // Spring ApplicationContext (IoC container)
+    ApplicationContext appContext;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.debug("Initializing Quizzard web application");
 
+        appContext = new AnnotationConfigApplicationContext(AppConfig.class);
+        
         ObjectMapper mapper = new ObjectMapper();
-        JwtConfig jwtConfig = new JwtConfig();
-        TokenService tokenService = new TokenService(jwtConfig);
-
-        UserDAO userDAO = new UserDAO();
-        UserService userService = new UserService(userDAO);
+        
+        // manually grabbing beans to pass to the servlets :)
+        TokenService tokenService = appContext.getBean(TokenService.class);
+        UserService userService = appContext.getBean(UserService.class);
+        
         UserServlet userServlet = new UserServlet(tokenService, userService, mapper);
         AuthServlet authServlet = new AuthServlet(tokenService, userService, mapper);
 
@@ -40,6 +48,8 @@ public class ContextLoaderListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         logger.debug("Shutting down Quizzard web application");
+        
+        ((ConfigurableWebApplicationContext) this.appContext).close();
     }
 
 }
