@@ -4,8 +4,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+
+import org.springframework.stereotype.Component;
+
 import java.security.Key;
 
+@Component
 public class JwtConfig {
 
     private final String salt = "dont-hard-code-salt-values"; // use a Properties file instead
