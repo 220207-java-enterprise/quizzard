@@ -13,6 +13,9 @@ import com.revature.quizzard.util.exceptions.InvalidRequestException;
 import com.revature.quizzard.util.exceptions.ResourceConflictException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,7 +27,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
-// Mapping: /users/*
+@Controller
 public class UserServlet extends HttpServlet {
 
     private static Logger logger = LogManager.getLogger(UserServlet.class);
@@ -33,6 +36,7 @@ public class UserServlet extends HttpServlet {
     private final UserService userService;
     private final ObjectMapper mapper;
 
+    @Autowired
     public UserServlet(TokenService tokenService, UserService userService, ObjectMapper mapper) {
         this.tokenService = tokenService;
         this.userService = userService;

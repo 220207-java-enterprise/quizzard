@@ -9,6 +9,8 @@ import com.revature.quizzard.services.TokenService;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,12 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Component
 public class AuthServlet extends HttpServlet {
 
     private final TokenService tokenService;
     private final UserService userService;
     private final ObjectMapper mapper;
 
+    @Autowired
     public AuthServlet(TokenService tokenService, UserService userService, ObjectMapper mapper) {
         this.tokenService = tokenService;
         this.userService = userService;
