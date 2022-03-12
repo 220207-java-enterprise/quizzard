@@ -6,6 +6,7 @@ import com.revature.quizzard.dtos.responses.AppUserResponse;
 import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.models.UserRole;
+import com.revature.quizzard.repos.UserRepository;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
 import com.revature.quizzard.util.exceptions.ResourceConflictException;
@@ -14,27 +15,19 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-	/*
-	 field injection: really readable, but requires Spring to use Reflection
-	 in order to set the private field
-	 */
-	// @Autowired // field injection
-    private UserDAO userDAO; // a dependency of UserService
+    private UserDAO userDAO;
+    private UserRepository userRepo;
 
-    /* Constructor injection: a little less readable, can't change the
-     * dependency later, but it makes the most sense logically with
-     * what a dependency is supposed to be (a requirement to create the object)
-     * 
-     * if you only have one constructor, you can leave out the Autowired annotation
-     */
-    //@Autowired
-    public UserService(UserDAO userDAO) {
+    @Autowired
+    public UserService(UserDAO userDAO, UserRepository userRepo) {
         this.userDAO = userDAO;
+        this.userRepo = userRepo;
     }
     
     /* setter injection: less readable, but allows you to change
@@ -46,16 +39,6 @@ public class UserService {
 //    }
 
     public List<AppUserResponse> getAllUsers() {
-
-        // Pre-Java 8 mapping logic (without Streams)
-//        List<AppUser> users = userDAO.getAll();
-//        List<AppUserResponse> userResponses = new ArrayList<>();
-//        for (AppUser user : users) {
-//            userResponses.add(new AppUserResponse(user));
-//        }
-//        return userResponses;
-
-        // Java 8+ mapping logic (with Streams)
         return userDAO.getAll()
                       .stream()
                       .map(AppUserResponse::new) // intermediate operation
@@ -100,7 +83,7 @@ public class UserService {
 
         // TODO encrypt provided password (assumes password encryption is in place) to see if it matches what is in the DB
 
-        AppUser authUser = userDAO.findUserByUsernameAndPassword(username, password);
+        AppUser authUser = userRepo.findAppUserByUsernameAndPassword(username, password);
 
         if (authUser == null) {
             throw new AuthenticationException();

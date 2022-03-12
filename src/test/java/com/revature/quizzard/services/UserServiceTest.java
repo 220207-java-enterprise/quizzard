@@ -7,6 +7,7 @@ import com.revature.quizzard.dtos.requests.LoginRequest;
 import com.revature.quizzard.dtos.requests.NewUserRequest;
 import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.models.UserRole;
+import com.revature.quizzard.repos.UserRepository;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.DataSourceException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
@@ -35,10 +36,11 @@ public class UserServiceTest {
 
     private UserService sut; // sut = System Under Test
     private UserDAO mockUserDao = mock(UserDAO.class);
+    private UserRepository mockUserRepo = mock(UserRepository.class);
 
     @Before
     public void setup() {
-        sut = new UserService(mockUserDao);
+        sut = new UserService(mockUserDao, mockUserRepo);
     }
 
     @After
