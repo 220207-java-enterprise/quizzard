@@ -194,7 +194,7 @@ public class UserServiceTest {
         doReturn(true).when(spiedSut).isUserValid(any());
         doReturn(true).when(spiedSut).isUsernameAvailable(anyString());
         doReturn(true).when(spiedSut).isEmailAvailable(anyString());
-        doNothing().when(mockUserRepo).save(any());
+        doReturn(null).when(mockUserRepo).save(any());
 
         // Act
         AppUser registerResult = spiedSut.register(stubbedRequest);
