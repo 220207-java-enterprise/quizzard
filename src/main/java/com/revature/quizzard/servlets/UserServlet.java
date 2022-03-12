@@ -1,6 +1,5 @@
 package com.revature.quizzard.servlets;
 
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.quizzard.dtos.requests.NewUserRequest;
 import com.revature.quizzard.dtos.responses.AppUserResponse;
@@ -102,7 +101,7 @@ public class UserServlet extends HttpServlet {
             String payload = mapper.writeValueAsString(new ResourceCreationResponse(newUser.getId()));
             respWriter.write(payload);
 
-        } catch (InvalidRequestException | DatabindException e) {
+        } catch (InvalidRequestException e) {
             resp.setStatus(400); // BAD REQUEST
         } catch (ResourceConflictException e) {
             resp.setStatus(409); // CONFLICT

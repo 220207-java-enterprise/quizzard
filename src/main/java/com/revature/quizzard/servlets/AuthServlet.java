@@ -1,10 +1,9 @@
 package com.revature.quizzard.servlets;
 
-import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.quizzard.dtos.requests.LoginRequest;
 import com.revature.quizzard.dtos.responses.Principal;
-import com.revature.quizzard.models.AppUser;
 import com.revature.quizzard.services.TokenService;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
@@ -60,7 +59,7 @@ public class AuthServlet extends HttpServlet {
             writer.write(payload);
 
 
-        } catch (InvalidRequestException | DatabindException e) {
+        } catch (InvalidRequestException | JacksonException e) {
             resp.setStatus(400);
         } catch (AuthenticationException e) {
             resp.setStatus(401); // UNAUTHORIZED (no user found with provided credentials)

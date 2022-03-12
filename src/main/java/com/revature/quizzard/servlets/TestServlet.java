@@ -1,7 +1,5 @@
 package com.revature.quizzard.servlets;
 
-import com.revature.quizzard.services.UserService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
