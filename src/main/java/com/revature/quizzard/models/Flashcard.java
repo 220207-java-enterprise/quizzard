@@ -1,24 +1,37 @@
 package com.revature.quizzard.models;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "flashcards")
 public class Flashcard {
 
+    @Id
     private String id;
-    private String questionText;
-    private String answerText;
-    private String creatorId;
 
-    // TODO create Category enum
+    @Column(name = "question_text", nullable = false)
+    private String questionText;
+
+    @Column(name = "answer_text", nullable = false)
+    private String answerText;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id", nullable = false)
+    private AppUser creator;
+
+    @ManyToOne
+    @JoinColumn(name = "category", nullable = false)
+    public Category category;
 
     public Flashcard() {
         super();
     }
 
-    public Flashcard(String questionText, String answerText, String creatorId) {
+    public Flashcard(String questionText, String answerText, AppUser creator) {
         this.questionText = questionText;
         this.answerText = answerText;
-        this.creatorId = creatorId;
+        this.creator = creator;
     }
 
     public String getId() {
@@ -45,12 +58,20 @@ public class Flashcard {
         this.answerText = answerText;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    public AppUser getCreator() {
+        return creator;
     }
 
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
+    public void setCreator(AppUser creator) {
+        this.creator = creator;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
@@ -58,12 +79,16 @@ public class Flashcard {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Flashcard flashcard = (Flashcard) o;
-        return Objects.equals(id, flashcard.id) && Objects.equals(questionText, flashcard.questionText) && Objects.equals(answerText, flashcard.answerText) && Objects.equals(creatorId, flashcard.creatorId);
+        return Objects.equals(id, flashcard.id) &&
+                Objects.equals(questionText, flashcard.questionText) &&
+                Objects.equals(answerText, flashcard.answerText) &&
+                Objects.equals(creator, flashcard.creator) &&
+                category == flashcard.category;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, questionText, answerText, creatorId);
+        return Objects.hash(id, questionText, answerText, creator, category);
     }
 
     @Override
@@ -72,7 +97,8 @@ public class Flashcard {
                 "id='" + id + '\'' +
                 ", questionText='" + questionText + '\'' +
                 ", answerText='" + answerText + '\'' +
-                ", creatorId='" + creatorId + '\'' +
+                ", creator=" + creator +
+                ", category=" + category +
                 '}';
     }
 
