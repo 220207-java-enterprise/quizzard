@@ -2,7 +2,6 @@ package com.revature.quizzard.services;
 
 // Test Suite
 // A class that encapsulates one or more test methods (cases)
-import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.dtos.requests.LoginRequest;
 import com.revature.quizzard.dtos.requests.NewUserRequest;
 import com.revature.quizzard.models.AppUser;
@@ -35,17 +34,16 @@ public class UserServiceTest {
      */
 
     private UserService sut; // sut = System Under Test
-    private UserDAO mockUserDao = mock(UserDAO.class);
-    private UserRepository mockUserRepo = mock(UserRepository.class);
+    private final UserRepository mockUserRepo = mock(UserRepository.class);
 
     @Before
     public void setup() {
-        sut = new UserService(mockUserDao, mockUserRepo);
+        sut = new UserService(mockUserRepo);
     }
 
     @After
     public void cleanUp() {
-        reset(mockUserDao);
+        reset(mockUserRepo);
     }
 
     @Test
@@ -106,7 +104,7 @@ public class UserServiceTest {
         try {
             sut.login(loginRequest);
         } finally {
-            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+            verify(mockUserRepo, times(0)).findAppUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         }
 
     }
@@ -121,7 +119,7 @@ public class UserServiceTest {
         try {
             sut.login(loginRequest);
         } finally {
-            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+            verify(mockUserRepo, times(0)).findAppUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         }
 
     }
@@ -136,7 +134,7 @@ public class UserServiceTest {
         try {
             sut.login(loginRequest);
         } finally {
-            verify(mockUserDao, times(0)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+            verify(mockUserRepo, times(0)).findAppUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         }
 
     }
@@ -151,7 +149,7 @@ public class UserServiceTest {
 
         when(spiedSut.isUsernameValid(loginRequest.getUsername())).thenReturn(true);
         when(spiedSut.isPasswordValid(loginRequest.getPassword())).thenReturn(true);
-        when(mockUserDao.findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(null);
+        when(mockUserRepo.findAppUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(null);
 
         // Act
         sut.login(loginRequest);
@@ -168,14 +166,14 @@ public class UserServiceTest {
 
         when(spiedSut.isUsernameValid(loginRequest.getUsername())).thenReturn(true);
         when(spiedSut.isPasswordValid(loginRequest.getPassword())).thenReturn(true);
-        when(mockUserDao.findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(new AppUser());
+        when(mockUserRepo.findAppUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword())).thenReturn(new AppUser());
 
         // Act
         AppUser loginResult = spiedSut.login(loginRequest);
 
         // Assert
         assertNotNull(loginResult);
-        verify(mockUserDao, times(1)).findUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+        verify(mockUserRepo, times(1)).findAppUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         verify(spiedSut, times(1)).isUsernameValid(loginRequest.getUsername());
         verify(spiedSut, times(1)).isPasswordValid(loginRequest.getPassword());
 
@@ -196,7 +194,7 @@ public class UserServiceTest {
         doReturn(true).when(spiedSut).isUserValid(any());
         doReturn(true).when(spiedSut).isUsernameAvailable(anyString());
         doReturn(true).when(spiedSut).isEmailAvailable(anyString());
-        doNothing().when(mockUserDao).save(any());
+        doNothing().when(mockUserRepo).save(any());
 
         // Act
         AppUser registerResult = spiedSut.register(stubbedRequest);
@@ -208,7 +206,7 @@ public class UserServiceTest {
         verify(spiedSut, times(1)).isUserValid(any());
         verify(spiedSut, times(1)).isUsernameAvailable(anyString());
         verify(spiedSut, times(1)).isEmailAvailable(anyString());
-        verify(mockUserDao, times(1)).save(any());
+        verify(mockUserRepo, times(1)).save(any());
 
     }
 
@@ -228,7 +226,7 @@ public class UserServiceTest {
             verify(spiedSut, times(1)).isUserValid(any());
             verify(spiedSut, times(0)).isUsernameAvailable(anyString());
             verify(spiedSut, times(0)).isEmailAvailable(anyString());
-            verify(mockUserDao, times(0)).save(any());
+            verify(mockUserRepo, times(0)).save(any());
         }
 
     }
@@ -244,7 +242,7 @@ public class UserServiceTest {
         doReturn(true).when(spiedSut).isUserValid(extractedUser);
         doReturn(true).when(spiedSut).isUsernameAvailable(anyString());
         doReturn(true).when(spiedSut).isEmailAvailable(anyString());
-        doThrow(new DataSourceException(new SQLException("stubbedSQLException"))).when(mockUserDao).save(any());
+        doThrow(new DataSourceException(new SQLException("stubbedSQLException"))).when(mockUserRepo).save(any());
 
         // Act
         try {
@@ -253,7 +251,7 @@ public class UserServiceTest {
             verify(spiedSut, times(1)).isUserValid(any());
             verify(spiedSut, times(1)).isUsernameAvailable(anyString());
             verify(spiedSut, times(1)).isEmailAvailable(anyString());
-            verify(mockUserDao, times(1)).save(any());
+            verify(mockUserRepo, times(1)).save(any());
         }
     }
 

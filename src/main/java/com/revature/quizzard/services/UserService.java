@@ -4,7 +4,6 @@ import com.revature.quizzard.dtos.requests.LoginRequest;
 import com.revature.quizzard.dtos.requests.NewUserRequest;
 import com.revature.quizzard.dtos.responses.AppUserResponse;
 import com.revature.quizzard.models.AppUser;
-import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.models.UserRole;
 import com.revature.quizzard.repos.UserRepository;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
@@ -21,28 +20,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private UserDAO userDAO;
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
 
     @Autowired
-    public UserService(UserDAO userDAO, UserRepository userRepo) {
-        this.userDAO = userDAO;
+    public UserService(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
-    
-    /* setter injection: less readable, but allows you to change
-     * the value of the dependency later in the code if needed
-     */
-//    @Autowired
-//    public void setUserDao(UserDAO userDao) {
-//    	this.userDAO = userDao;
-//    }
 
     public List<AppUserResponse> getAllUsers() {
-        return userDAO.getAll()
-                      .stream()
-                      .map(AppUserResponse::new) // intermediate operation
-                      .collect(Collectors.toList()); // terminal operation
+        return userRepo.findAll()
+                       .stream()
+                       .map(AppUserResponse::new)
+                       .collect(Collectors.toList());
     }
 
     public AppUser register(NewUserRequest newUserRequest) {
@@ -67,7 +56,7 @@ public class UserService {
 
         newUser.setId(UUID.randomUUID().toString());
         newUser.setRole(new UserRole("7c3521f5-ff75-4e8a-9913-01d15ee4dc97", "BASIC_USER")); // All newly registered users start as BASIC_USER
-        userDAO.save(newUser);
+        userRepo.save(newUser);
 
         return newUser;
     }
@@ -132,12 +121,12 @@ public class UserService {
 
     public boolean isUsernameAvailable(String username) {
         if (username == null || !isUsernameValid(username)) return false;
-        return userDAO.findUserByUsername(username) == null;
+        return userRepo.findAppUserByUsername(username) == null;
     }
 
     public boolean isEmailAvailable(String email) {
         if (email == null || !isEmailValid(email)) return false;
-        return userDAO.findUserByEmail(email) == null;
+        return userRepo.findAppUserByEmail(email) == null;
     }
 
 }
