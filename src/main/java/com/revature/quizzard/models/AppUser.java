@@ -1,18 +1,32 @@
 package com.revature.quizzard.models;
 
+import javax.persistence.*;
 import java.util.Objects;
 
-// POJO = Plain Ol' Java Object
-// Contains NO BUSINESS LOGIC
-// Simple encapsulation of some domain object's states
+@Entity
+@Table(name = "app_users")
 public class AppUser {
 
+    @Id
     private String id;
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "role", nullable = false)
     private UserRole role;
 
     public AppUser() {

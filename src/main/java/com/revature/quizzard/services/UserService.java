@@ -4,63 +4,34 @@ import com.revature.quizzard.dtos.requests.LoginRequest;
 import com.revature.quizzard.dtos.requests.NewUserRequest;
 import com.revature.quizzard.dtos.responses.AppUserResponse;
 import com.revature.quizzard.models.AppUser;
-import com.revature.quizzard.daos.UserDAO;
 import com.revature.quizzard.models.UserRole;
+import com.revature.quizzard.repos.UserRepository;
 import com.revature.quizzard.util.exceptions.AuthenticationException;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
 import com.revature.quizzard.util.exceptions.ResourceConflictException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-	/*
-	 field injection: really readable, but requires Spring to use Reflection
-	 in order to set the private field
-	 */
-	// @Autowired // field injection
-    private UserDAO userDAO; // a dependency of UserService
+    private final UserRepository userRepo;
 
-    /* Constructor injection: a little less readable, can't change the
-     * dependency later, but it makes the most sense logically with
-     * what a dependency is supposed to be (a requirement to create the object)
-     * 
-     * if you only have one constructor, you can leave out the Autowired annotation
-     */
-    //@Autowired
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    @Autowired
+    public UserService(UserRepository userRepo) {
+        this.userRepo = userRepo;
     }
-    
-    /* setter injection: less readable, but allows you to change
-     * the value of the dependency later in the code if needed
-     */
-//    @Autowired
-//    public void setUserDao(UserDAO userDao) {
-//    	this.userDAO = userDao;
-//    }
 
     public List<AppUserResponse> getAllUsers() {
-
-        // Pre-Java 8 mapping logic (without Streams)
-//        List<AppUser> users = userDAO.getAll();
-//        List<AppUserResponse> userResponses = new ArrayList<>();
-//        for (AppUser user : users) {
-//            userResponses.add(new AppUserResponse(user));
-//        }
-//        return userResponses;
-
-        // Java 8+ mapping logic (with Streams)
-        return userDAO.getAll()
-                      .stream()
-                      .map(AppUserResponse::new) // intermediate operation
-                      .collect(Collectors.toList()); // terminal operation
+        return userRepo.findAll()
+                       .stream()
+                       .map(AppUserResponse::new)
+                       .collect(Collectors.toList());
     }
 
     public AppUser register(NewUserRequest newUserRequest) {
@@ -85,7 +56,7 @@ public class UserService {
 
         newUser.setId(UUID.randomUUID().toString());
         newUser.setRole(new UserRole("7c3521f5-ff75-4e8a-9913-01d15ee4dc97", "BASIC_USER")); // All newly registered users start as BASIC_USER
-        userDAO.save(newUser);
+        userRepo.save(newUser);
 
         return newUser;
     }
@@ -101,7 +72,7 @@ public class UserService {
 
         // TODO encrypt provided password (assumes password encryption is in place) to see if it matches what is in the DB
 
-        AppUser authUser = userDAO.findUserByUsernameAndPassword(username, password);
+        AppUser authUser = userRepo.findAppUserByUsernameAndPassword(username, password);
 
         if (authUser == null) {
             throw new AuthenticationException();
@@ -150,12 +121,12 @@ public class UserService {
 
     public boolean isUsernameAvailable(String username) {
         if (username == null || !isUsernameValid(username)) return false;
-        return userDAO.findUserByUsername(username) == null;
+        return userRepo.findAppUserByUsername(username) == null;
     }
 
     public boolean isEmailAvailable(String email) {
         if (email == null || !isEmailValid(email)) return false;
-        return userDAO.findUserByEmail(email) == null;
+        return userRepo.findAppUserByEmail(email) == null;
     }
 
 }

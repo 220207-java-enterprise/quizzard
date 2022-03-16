@@ -1,10 +1,16 @@
 package com.revature.quizzard.models;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "user_roles")
 public class UserRole {
 
+    @Id
     private String id;
+
+    @Column(name = "role_name", nullable = false, unique = true)
     private String roleName;
 
     public UserRole() {

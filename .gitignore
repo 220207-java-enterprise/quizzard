@@ -32,6 +32,3 @@ build/
 out/
 dist/
 
-# App-specific folders and files
-data/
-application.properties
