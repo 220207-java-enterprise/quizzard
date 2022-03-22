@@ -84,6 +84,12 @@ public class UserService {
 
     public boolean isUserValid(AppUser appUser) {
 
+        System.out.println(appUser);
+
+        if (appUser == null) {
+            return false;
+        }
+
         // First name and last name are not just empty strings or filled with whitespace
         if (appUser.getFirstName().trim().equals("") || appUser.getLastName().trim().equals("")) {
             return false;

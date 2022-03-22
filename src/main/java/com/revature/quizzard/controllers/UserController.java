@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResourceCreationResponse registerNewUser(NewUserRequest newUserRequest) {
+    public ResourceCreationResponse registerNewUser(@RequestBody NewUserRequest newUserRequest) {
         return new ResourceCreationResponse(userService.register(newUserRequest).getId());
     }
 

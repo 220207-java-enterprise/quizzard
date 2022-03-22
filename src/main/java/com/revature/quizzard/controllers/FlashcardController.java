@@ -3,12 +3,14 @@ package com.revature.quizzard.controllers;
 import com.revature.quizzard.models.Flashcard;
 import com.revature.quizzard.repos.FlashcardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@CrossOrigin(allowedHeaders = {"Authorization"})
 @RestController
 @RequestMapping("/flashcards")
 public class FlashcardController {
