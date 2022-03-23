@@ -6,7 +6,6 @@ import com.revature.quizzard.dtos.responses.ResourceCreationResponse;
 import com.revature.quizzard.services.UserService;
 import com.revature.quizzard.util.exceptions.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
